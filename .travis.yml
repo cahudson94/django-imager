@@ -4,7 +4,7 @@ python:
   - "3.6"
 
 env:
-  - SECRET_KEY='potato' DATABASE_NAME='usersdb' DATABASE_USER='postgres' DATABASE_HOST="127.0.0.1" DATABASE_PASSWORD=''
+  - SECRET_KEY='potato' DATABASE_NAME='usersdb' DATABASE_USER='' DATABASE_HOST="127.0.0.1" DATABASE_PASSWORD=''
 
 # command to install dependencies
 install:
