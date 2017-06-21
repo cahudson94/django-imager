@@ -54,19 +54,18 @@ class ProfileTestCase(TestCase):
 
     def test_deletion_of_lives(self):
         """Delete that user, reduce user count."""
-        print(User.objects.all())
         user = User.objects.filter(username='user50')
         user.delete()
-        print(self.users)
         self.assertEquals(24, len(ImagerProfile.objects.all()))
 
     def test_add_attr_and_check_if_true(self):
         """Add attributes and check that everything is added and true."""
-        ImagerProfile.objects.first().job = 'Dinosaur wrangler'
-        ImagerProfile.objects.first().website = 'raptorrider.com'
-        ImagerProfile.objects.first().camera_type = 'Canon'
-        ImagerProfile.objects.first().photography_style = 'Landscape'
-        ImagerProfile().save()
+        user = ImagerProfile.objects.first()
+        user.job = 'Dinosaur wrangler'
+        user.website = 'raptorrider.com'
+        user.camera_type = 'Canon'
+        user.photography_style = 'Landscape'
+        user.save()
         self.assertTrue(ImagerProfile.objects.first().job, 'Dinosaur wrangler')
         self.assertTrue(ImagerProfile.objects.first().website, 'raptorrider.com')
         self.assertTrue(ImagerProfile.objects.first().camera_type, 'Canon')
