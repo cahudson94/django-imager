@@ -8,7 +8,6 @@ env:
 
 # command to install dependencies
 install:
-  - pip install requirements.pip
   - pip install coverage
 
 services:
