@@ -8,6 +8,7 @@ env:
 
 # command to install dependencies
 install:
+  - pip install -r requirements.pip
   - pip install coverage
 
 services:
@@ -17,5 +18,4 @@ before_script:
   - psql -c 'create database testdb;' -U postgres
 
 # command to run tests
-script: 
-  - python imagersite/manage.py test
+script: python manage.py test
