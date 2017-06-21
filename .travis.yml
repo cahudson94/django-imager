@@ -1,0 +1,18 @@
+language: python
+python:
+  - "2.7"
+  - "3.6"
+
+# command to install dependencies
+install:
+  - pip install requirements.pip
+  - pip install coverage
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'create database testdb;' -U postgres
+
+# command to run tests
+script: python imagersite/manage.py test
