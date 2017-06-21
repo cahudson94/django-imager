@@ -3,6 +3,9 @@ python:
   - "2.7"
   - "3.6"
 
+env:
+    - SECRET_KEY='potato'
+
 # command to install dependencies
 install:
   - pip install requirements.pip
