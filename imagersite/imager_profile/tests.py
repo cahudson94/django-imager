@@ -70,3 +70,52 @@ class ProfileTestCase(TestCase):
         self.assertTrue(ImagerProfile.objects.first().website, 'raptorrider.com')
         self.assertTrue(ImagerProfile.objects.first().camera_type, 'Canon')
         self.assertTrue(ImagerProfile.objects.first().photography_style, 'Landscape')
+
+
+class LoginTestCase(TestCase):
+    """Our login and register tests."""
+
+    def login_helper(self, username, password):
+        """Log in using a post request."""
+        return self.client.post('/login', {'username': username,
+                                           'password': password})
+
+    def test_home(self):
+        """Test that home page is available to logged out user."""
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_register(self):
+        """Test registration is available, and redirects on post."""
+        username = 'dino'
+        email = 'dino@dino.com'
+        password = 'secretpass'
+        response = self.client.get(reverse('registration_register'))
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(
+            reverse('registration_register'), {
+                'username': username,
+                'email': email,
+                'password': password
+            })
+        self.assertEqual(response.status_code, 200)
+
+    def test_login(self):
+        """Test login is reachable when not logged in.
+
+        login changes auth.
+        """
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        deckardcain = UserFactory(username='deckardcain', password='secret')
+        self.login_helper('deckardcain', 'secretpass')
+        assert deckardcain.is_authenticated()
+
+    def test_profile_view_redirect(self):
+        """Unauthenticated user redirected when trying.
+
+        to view personal profile.
+        """
+        self.client.get('/logout/', follow=True)
+        response = self.client.get('/profile/')
+        self.assertEqual(response.status_code, 302)
