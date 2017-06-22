@@ -107,7 +107,7 @@ class LoginTestCase(TestCase):
         response = self.client.get(reverse('login'))
         self.assertEqual(response.status_code, 200)
         deckardcain = UserFactory(username='deckardcain', password='secret')
-        self.login_helper('deckardcain', 'secretpass')
+        self.login_helper('deckardcain', 'secret')
         assert deckardcain.is_authenticated()
 
     def test_profile_view_redirect(self):
