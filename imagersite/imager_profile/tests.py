@@ -3,7 +3,6 @@ from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
 from imager_profile.models import ImagerProfile
 from django.urls import reverse
-
 import factory
 
 
@@ -90,10 +89,10 @@ class LoginTestCase(TestCase):
         username = 'dino'
         email = 'dino@dino.com'
         password = 'secretpass'
-        response = self.client.get(reverse('registration_register'))
+        response = self.client.get(reverse('registration'))
         self.assertEqual(response.status_code, 200)
         response = self.client.post(
-            reverse('registration_register'), {
+            reverse('registration'), {
                 'username': username,
                 'email': email,
                 'password': password

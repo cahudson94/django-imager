@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from imager_profile import home_view
+from imager_profile.views import home_view
 
 urlpatterns = [
     url(r'^$', home_view, name='home'),
