@@ -1,7 +1,8 @@
 """Tests for imager profile app."""
-from django.test import TestCase
+from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
 from imager_profile.models import ImagerProfile
+from django.urls import reverse
 
 import factory
 
@@ -32,8 +33,40 @@ class ProfileTestCase(TestCase):
 
         self.users = users
 
-    def test_users_have_profiles(self):
+    def test_users_have_profiles_raises_an_exception(self):
         """The function says it all."""
         with self.assertRaises(Exception):
             profile = ImagerProfile()
             profile.save()
+
+    def test_users_profile_are_equal(self):
+        """Test that when a user is created it has a profile."""
+        self.assertEquals(len(self.users), len(ImagerProfile.objects.all()))
+
+    def test_correct_amount_of_profiles(self):
+        """Test amount of profiles."""
+        self.assertEquals(25, len(ImagerProfile.objects.all()))
+
+    def test_profile_has_correct_attrs(self):
+        """Test that correct attributes are on profile."""
+        self.assertTrue(ImagerProfile.objects.first().photography_style, 'Color')
+        self.assertTrue(ImagerProfile.objects.first().active, False)
+
+    def test_deletion_of_lives(self):
+        """Delete that user, reduce user count."""
+        user = User.objects.filter(username='user50')
+        user.delete()
+        self.assertEquals(24, len(ImagerProfile.objects.all()))
+
+    def test_add_attr_and_check_if_true(self):
+        """Add attributes and check that everything is added and true."""
+        user = ImagerProfile.objects.first()
+        user.job = 'Dinosaur wrangler'
+        user.website = 'raptorrider.com'
+        user.camera_type = 'Canon'
+        user.photography_style = 'Landscape'
+        user.save()
+        self.assertTrue(ImagerProfile.objects.first().job, 'Dinosaur wrangler')
+        self.assertTrue(ImagerProfile.objects.first().website, 'raptorrider.com')
+        self.assertTrue(ImagerProfile.objects.first().camera_type, 'Canon')
+        self.assertTrue(ImagerProfile.objects.first().photography_style, 'Landscape')
