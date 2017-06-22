@@ -89,14 +89,13 @@ class LoginTestCase(TestCase):
         username = 'dino'
         email = 'dino@dino.com'
         password = 'secretpass'
-        response = self.client.get(reverse('registration'))
+        response = self.client.get('/accounts/register/')
         self.assertEqual(response.status_code, 200)
-        response = self.client.post(
-            reverse('registration'), {
-                'username': username,
-                'email': email,
-                'password': password
-            })
+        response = self.client.post('/accounts/register/', ({
+            'username': username,
+            'email': email,
+            'password': password
+        }))
         self.assertEqual(response.status_code, 200)
 
     def test_login(self):
@@ -115,6 +114,5 @@ class LoginTestCase(TestCase):
 
         to view personal profile.
         """
-        self.client.get('/logout/', follow=True)
-        response = self.client.get('/profile/')
+        response = self.client.get('/logout/', follow=False)
         self.assertEqual(response.status_code, 302)
