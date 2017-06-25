@@ -18,7 +18,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 # from django.conf import settings
 # from django.conf.urls.static import static
-from imager_profile.views import home_view
+from imager_profile.views import home_view, profile_view
 
 
 urlpatterns = [
@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^login/', auth_views.login, name='login'),
     url(r'^logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
+    url(r'^profile/', profile_view, name='profile')
 ]

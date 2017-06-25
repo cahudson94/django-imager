@@ -13,3 +13,9 @@ def home_view(request):
 def account_view(request):
     """Registration view for imager."""
     return render(request, 'imagersite/accounts.html')
+
+
+def profile_view(request):
+    """The view for our profile page."""
+    context = {'bobs': 'groot'}
+    return render(request, 'imagersite/profile.html', context=context)
