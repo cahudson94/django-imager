@@ -1,5 +1,6 @@
 """View file for django imagerproject."""
 from django.shortcuts import render
+from imager_profile.models import ImagerProfile
 # from django.http import HttpResponse
 # from django.template import loader
 
@@ -17,5 +18,12 @@ def account_view(request):
 
 def profile_view(request):
     """The view for our profile page."""
-    context = {'bobs': 'groot'}
-    return render(request, 'imagersite/profile.html', context=context)
+    current_user = request.user
+    user = ImagerProfile.objects.filter(user=current_user).first()
+    userdata = {'username': user.user,
+                'job': user.job,
+                'camera': user.camera_type,
+                'photostyle': user.photography_style,
+                'website': user.website
+                }
+    return render(request, 'imagersite/profile.html', context=userdata)
