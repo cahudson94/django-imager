@@ -3,7 +3,6 @@ from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
 from imager_profile.models import ImagerProfile
 from django.urls import reverse
-
 import factory
 
 
@@ -52,21 +51,61 @@ class ProfileTestCase(TestCase):
         self.assertTrue(ImagerProfile.objects.first().photography_style, 'Color')
         self.assertTrue(ImagerProfile.objects.first().active, False)
 
-    def test_deletion_of_lives(self):
-        """Delete that user, reduce user count."""
-        user = User.objects.filter(username='user50')
-        user.delete()
-        self.assertEquals(24, len(ImagerProfile.objects.all()))
+    # def test_deletion_of_lives(self):
+    #     """Delete that user, reduce user count."""
+    #     user = User.objects.filter(username='user50')
+    #     user.delete()
+    #     self.assertEquals(24, len(ImagerProfile.objects.all()))
 
-    def test_add_attr_and_check_if_true(self):
-        """Add attributes and check that everything is added and true."""
-        user = ImagerProfile.objects.first()
-        user.job = 'Dinosaur wrangler'
-        user.website = 'raptorrider.com'
-        user.camera_type = 'Canon'
-        user.photography_style = 'Landscape'
-        user.save()
-        self.assertTrue(ImagerProfile.objects.first().job, 'Dinosaur wrangler')
-        self.assertTrue(ImagerProfile.objects.first().website, 'raptorrider.com')
-        self.assertTrue(ImagerProfile.objects.first().camera_type, 'Canon')
-        self.assertTrue(ImagerProfile.objects.first().photography_style, 'Landscape')
+    def test_imagerprofile_attributes(self):
+        """Test that ImagerProfile has the expected attributes."""
+        attribute_list = ["user", "city", "location", "camera_type", "photography_style", "job", "website"]
+        for item in attribute_list:
+            self.assertTrue(hasattr(ImagerProfile, item))
+
+
+class LoginTestCase(TestCase):
+    """Our login and register tests."""
+
+    def login_helper(self, username, password):
+        """Log in using a post request."""
+        return self.client.post('/login', {'username': username,
+                                           'password': password})
+
+    def test_home(self):
+        """Test that home page is available to logged out user."""
+        response = self.client.get(reverse('home'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_register(self):
+        """Test registration is available, and redirects on post."""
+        username = 'dino'
+        email = 'dino@dino.com'
+        password = 'secretpass'
+        response = self.client.get('/accounts/register/')
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post('/accounts/register/', ({
+            'username': username,
+            'email': email,
+            'password': password
+        }))
+        self.assertEqual(response.status_code, 200)
+
+    def test_login(self):
+        """Test login is reachable when not logged in.
+
+        login changes auth.
+        """
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+        deckardcain = UserFactory(username='deckardcain', password='secret')
+        self.login_helper('deckardcain', 'secret')
+        assert deckardcain.is_authenticated()
+
+    def test_profile_view_redirect(self):
+        """Unauthenticated user redirected when trying.
+
+        to view personal profile.
+        """
+        response = self.client.get('/logout/', follow=False)
+        self.assertEqual(response.status_code, 302)

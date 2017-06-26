@@ -4,5 +4,5 @@
 
 ## Authors: Casey O'Kane and Chris Hudson
 
-## Description:
+##Description:
 A photosharing webapp built on Django framework for Code Fellows 401d6.

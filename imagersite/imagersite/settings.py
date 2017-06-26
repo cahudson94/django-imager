@@ -27,6 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+ACCOUNT_ACTIVATION_DAYS = 7
+
+LOGIN_REDIRECT_URL = '/profile'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Application definition
 
@@ -39,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'location_field.apps.DefaultConfig',
     'imager_profile',
-    'registration',
+    'imagersite',
+    'imager_images',
 ]
 
 MIDDLEWARE = [
@@ -123,8 +130,20 @@ USE_L10N = True
 
 USE_TZ = True
 
+REGISTRATION_OPEN = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    '/var/www/static/'
+]
+
+MEDIA_URL = '/MEDIA/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
