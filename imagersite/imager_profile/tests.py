@@ -46,9 +46,16 @@ class ProfileTestCase(TestCase):
         """Test amount of profiles."""
         self.assertEquals(25, len(ImagerProfile.objects.all()))
 
+    def test_profile_is_associated_with_actual_users(self):
+        """Test profile is associated with actual users."""
+        profile = ImagerProfile.objects.first()
+        self.assertTrue(hasattr(profile, "user"))
+        self.assertIsInstance(profile.user, User)
+
     def test_profile_has_correct_attrs(self):
         """Test that correct attributes are on profile."""
-        self.assertTrue(ImagerProfile.objects.first().photography_style, 'Color')
+        self.assertTrue(
+            ImagerProfile.objects.first().photography_style, 'Color')
         self.assertTrue(ImagerProfile.objects.first().active, False)
 
     # def test_deletion_of_lives(self):
@@ -59,7 +66,8 @@ class ProfileTestCase(TestCase):
 
     def test_imagerprofile_attributes(self):
         """Test that ImagerProfile has the expected attributes."""
-        attribute_list = ["user", "city", "location", "camera_type", "photography_style", "job", "website"]
+        attribute_list = ["user", "city", "location",
+                          "camera_type", "photography_style", "job", "website"]
         for item in attribute_list:
             self.assertTrue(hasattr(ImagerProfile, item))
 
