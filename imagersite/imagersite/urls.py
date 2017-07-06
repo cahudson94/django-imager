@@ -18,17 +18,19 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from imager_profile.views import home_view, profile_view, library_view
+from imager_profile.views import HomeView, LibraryView, ProfileView
+from imager_images.views import ImageCreate
 
 
 urlpatterns = [
-    url(r'^$', home_view, name='home'),
+    url(r'^$', HomeView.as_view(), name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
     url(r'^login/', auth_views.login, name='login'),
     url(r'^logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
-    url(r'^profile/', profile_view, name='profile'),
-    url(r'^images/library/', library_view, name='library'),
+    url(r'^profile/', ProfileView.as_view(), name='profile'),
+    url(r'^images/library/', LibraryView.as_view(), name='library'),
+    url(r'^images/upload/', ImageCreate.as_view(), name='upload')
 ]
 
 if settings.DEBUG:

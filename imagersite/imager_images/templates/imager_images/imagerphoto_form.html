@@ -1,0 +1,6 @@
+{% include 'imagersite/base.html' %}
+<h1> Hi </h1>
+<form action="upload" method="post"> {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="save"/>
+</form>

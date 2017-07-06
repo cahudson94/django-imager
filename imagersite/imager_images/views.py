@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views.generic.edit import CreateView
+from imager_images.models import ImagerPhoto
 
-# Create your views here.
+
+class ImageCreate(CreateView):
+    model = ImagerPhoto
+    fields = ['photo', 'description', 'title', 'user', 'published', 'date_published']
+    template_name = "imager_images/imagerphoto_form.html"
