@@ -1,7 +1,7 @@
 """View file for django imagerproject."""
 from django.shortcuts import render
 from imager_profile.models import ImagerProfile
-from imager_images.models import ImagerPhoto
+from imager_images.models import ImagerPhoto, ImagerAlbum
 # from django.http import HttpResponse
 # from django.template import loader
 
@@ -39,4 +39,7 @@ def profile_view(request):
 def library_view(request):
     """The view for the user galleries."""
     photos = ImagerPhoto.objects.all()
-    return render(request, 'imagersite/library.html', {'photos': photos})
+    albums = ImagerAlbum.objects.all()
+    return render(request, 'imagersite/library.html',
+                  {'photos': photos,
+                   'albums': albums})

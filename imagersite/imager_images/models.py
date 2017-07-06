@@ -38,8 +38,10 @@ class ImagerAlbum(models.Model):
                              on_delete=models.CASCADE,
                              related_name='albums')
     title = models.CharField(default='', max_length=50)
-    photos = models.ManyToManyField(ImagerPhoto, default='', related_name='albums')
-    cover = models.ForeignKey(ImagerPhoto, null=True, related_name='+')
+    photos = models.ManyToManyField(ImagerPhoto, blank=True,
+                                    default='', related_name='albums')
+    cover = models.ForeignKey(ImagerPhoto, blank=True, null=True,
+                              related_name='+')
     published = models.CharField(
         max_length=2,
         choices=PUBLISHED_STATUS,
