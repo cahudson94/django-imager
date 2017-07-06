@@ -96,7 +96,7 @@ MAIN SECTION
 }
 
 .body {
-    background-color: #333;
+    background-color: white;
     opacity: 0.85;
     background-blend-mode: overlay;
     padding: 25px 25px 15px 25px;
@@ -104,7 +104,6 @@ MAIN SECTION
 
 .body h1 {
     text-align: center;
-    color: white;
 }
 
 .body h3 {
