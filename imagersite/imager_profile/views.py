@@ -43,3 +43,12 @@ def library_view(request):
     return render(request, 'imagersite/library.html',
                   {'photos': photos,
                    'albums': albums})
+
+def photo_view(request):
+    """The view for individual photos."""
+    photo = ImagerPhoto.objects.query()
+
+
+
+def album_view(request):
+    """The view for individual photos."""
