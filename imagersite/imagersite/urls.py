@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from imager_profile.views import (
     home_view,
     profile_view,
+    user_profile_view,
     library_view,
     photo_view,
     album_view)
@@ -33,6 +34,8 @@ urlpatterns = [
     url(r'^login/', auth_views.login, name='login'),
     url(r'^logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^profile/', profile_view, name='profile'),
+    url(r'^profile/(?P<request_username>\w+\d+)/$',
+        user_profile_view, name='public_profile'),
     url(r'^images/library/', library_view, name='library'),
     url(r'^images/photos/(?P<photo_id>\d+)/$', photo_view, name='photo'),
     url(r'^images/albums/(?P<album_id>\d+)/$', album_view, name='album')
