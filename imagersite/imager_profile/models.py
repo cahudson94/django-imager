@@ -62,24 +62,6 @@ class ImagerProfile(models.Model):
         """."""
         return self.user.is_active
 
-    # def __repr__(self):
-    #     """."""
-    #     return """
-    # username: {}
-    # location: {}
-    # camera_type: {}
-    # photography_style: {}
-    # job: {}
-    # website: {}
-    #     """.format(
-    #         self.user.username,
-    #         self.location,
-    #         self. camera_type,
-    #         self.photography_style,
-    #         self.job,
-    #         self.website
-    #     )
-
 
 @receiver(post_save, sender=User)
 def make_profile_for_new_user(sender, **kwargs):
