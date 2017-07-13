@@ -21,6 +21,18 @@ def profile_view(request):
     """The view for our profile page."""
     current_user = request.user
     user = ImagerProfile.objects.filter(user=current_user).first()
+    pub_pics = (ImagerPhoto.objects
+                .filter(user=current_user)
+                .filter(published='PB')).count()
+    pub_albums = (ImagerAlbum.objects
+                  .filter(user=current_user)
+                  .filter(published='PB')).count()
+    prv_pics = (ImagerPhoto.objects
+                .filter(user=current_user)
+                .filter(published='PV')).count()
+    prv_albums = (ImagerAlbum.objects
+                  .filter(user=current_user)
+                  .filter(published='PV')).count()
     userdata = {'username': user.user,
                 'location': (user.city + ', ' + user.state),
                 'pic': user.pic,
@@ -28,10 +40,10 @@ def profile_view(request):
                 'camera': user.camera_type,
                 'photostyle': user.photography_style,
                 'website': user.website,
-                'pub_pics': user.pub_pics,
-                'pub_albums': user.pub_albums,
-                'prv_pics': user.prv_pics,
-                'prv_albums': user.prv_albums,
+                'pub_pics': pub_pics,
+                'pub_albums': pub_albums,
+                'prv_pics': prv_pics,
+                'prv_albums': prv_albums,
                 }
     return render(request, 'imagersite/profile.html', context=userdata)
 
@@ -44,10 +56,10 @@ def library_view(request):
                   {'photos': photos,
                    'albums': albums})
 
+
 def photo_view(request):
     """The view for individual photos."""
     photo = ImagerPhoto.objects.query()
-
 
 
 def album_view(request):

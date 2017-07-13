@@ -101,7 +101,7 @@ class AlbumTestCase(TestCase):
     def test_album_has_no_image_inside(self):
         """Test that an album has no image inside of it."""
         album = ImagerAlbum.objects.first()
-        self.assertTrue(album.photo.count() == 0)
+        self.assertTrue(album.photos.count() == 0)
 
     def test_album_has_image_inside(self):
         """Test that an album has an image inside of it."""
