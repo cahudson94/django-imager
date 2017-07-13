@@ -18,7 +18,12 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from imager_profile.views import home_view, profile_view, gallery_view
+from imager_profile.views import (
+    home_view,
+    profile_view,
+    library_view,
+    photo_view,
+    album_view)
 
 
 urlpatterns = [
@@ -28,7 +33,9 @@ urlpatterns = [
     url(r'^login/', auth_views.login, name='login'),
     url(r'^logout/', auth_views.logout, {'next_page': '/'}, name='logout'),
     url(r'^profile/', profile_view, name='profile'),
-    url(r'^gallery/', gallery_view, name='gallery'),
+    url(r'^images/library/', library_view, name='library'),
+    url(r'^images/photos/(?P<photo_id>\d+)/$', photo_view, name='photo'),
+    url(r'^images/albums/(?P<album_id>\d+)/$', album_view, name='album')
 ]
 
 if settings.DEBUG:
@@ -38,5 +45,3 @@ if settings.DEBUG:
     urlpatterns += static(
         settings.STATIC_URL, document_root=settings.STATIC_ROOT
     )
-    
-

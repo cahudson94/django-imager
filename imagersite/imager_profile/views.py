@@ -1,7 +1,7 @@
 """View file for django imagerproject."""
 from django.shortcuts import render
 from imager_profile.models import ImagerProfile
-from imager_images.models import ImagerPhoto
+from imager_images.models import ImagerPhoto, ImagerAlbum
 # from django.http import HttpResponse
 # from django.template import loader
 
@@ -22,15 +22,33 @@ def profile_view(request):
     current_user = request.user
     user = ImagerProfile.objects.filter(user=current_user).first()
     userdata = {'username': user.user,
+                'location': (user.city + ', ' + user.state),
+                'pic': user.pic,
                 'job': user.job,
                 'camera': user.camera_type,
                 'photostyle': user.photography_style,
-                'website': user.website
+                'website': user.website,
+                'pub_pics': user.pub_pics,
+                'pub_albums': user.pub_albums,
+                'prv_pics': user.prv_pics,
+                'prv_albums': user.prv_albums,
                 }
     return render(request, 'imagersite/profile.html', context=userdata)
 
 
-def gallery_view(request):
+def library_view(request):
     """The view for the user galleries."""
     photos = ImagerPhoto.objects.all()
-    return render(request, 'imagersite/gallery.html', {'photos': photos})
+    albums = ImagerAlbum.objects.all()
+    return render(request, 'imagersite/library.html',
+                  {'photos': photos,
+                   'albums': albums})
+
+def photo_view(request):
+    """The view for individual photos."""
+    photo = ImagerPhoto.objects.query()
+
+
+
+def album_view(request):
+    """The view for individual photos."""
