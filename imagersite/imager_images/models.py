@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
+import random
 
 
 PUBLISHED_STATUS = (
@@ -9,6 +10,14 @@ PUBLISHED_STATUS = (
     ('PV', 'private'),
     ('SH', 'shared'),
 )
+
+
+class RandomPhotoManager(models.Manager):
+    def get_queryset(self):
+        queryset = super(RandomPhotoManager, self).get_queryset().filter(published='PB')
+        queryset = queryset.values_list('id', flat=True)
+        photo = random.choice(queryset)
+        return super(RandomPhotoManager, self).get_queryset().filter(id=photo)
 
 
 @python_2_unicode_compatible
