@@ -1,7 +1,15 @@
 {% extends 'imagersite/base.html' %}
+{% load static %}
+{% load thumbnail %}
 
-{% block title %}Home{% endblock %}
 
 {% block body %}
-<h1>I am {{ bobs }}!</h1>
+<div id='splash_photo'>
+    <h1>Welcome!</h1>
+    {% thumbnail random_photo.picture "900x450" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+    {% empty %}
+        <img src="{% static 'default_pic.jpg' %}">
+    {% endthumbnail %}
+</div>
 {% endblock %}

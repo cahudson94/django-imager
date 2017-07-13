@@ -2,24 +2,38 @@
 {% load static %}
 {% load thumbnail %}
 {% block title %}Library{% endblock %}
-
 {% block body %}
-{% for album in albums %}
-    {% thumbnail album.cover.photo "150x150" crop="center" as im %}
-        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-    {% empty %}
-        <img src="{% static 'black.png' %}" height="150" width="150"/>
-    {% endthumbnail %}
-{{ album.title }}
-{{ album.description }}
-{% endfor %}
+<div class="library">
+    <div class="album-section">
+        <h1>Your Albums</h1>
+        <ul>
+            {% for album in albums %}
+            <li>
+                {% thumbnail album.cover.photo "150x150" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                {% empty %}
+                    <img src="{% static 'black.png' %}" height="150" width="150"/>
+                {% endthumbnail %}
+                <a href="/images/albums/{{ album.id }}"><h5>{{ album.title }}</h5></a>
+                <h6>{{ album.description }}</h6>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
 
-<h1>Photos go here!</h1>
-{% for photo in photos %}
-    {% thumbnail photo.photo "150x150" crop="center" as pic %}
-        <img src="{{ pic.url }}" width="{{ pic.width }}" height="{{ pic.height }}"></img>
-    {% endthumbnail %}
-{{ photo.title }}
-{{ photo.description }}
-{% endfor %}
+    <div class="photo-section">
+        <h1>Your Photos</h1>
+        <ul>
+            {% for photo in photos %}
+            <li>
+                {% thumbnail photo.photo "150x150" crop="center" as pic %}
+                    <img src="{{ pic.url }}" width="{{ pic.width }}" height="{{ pic.height }}"></img>
+                {% endthumbnail %}
+                <a href="/images/photos/{{ photo.id }}"><h5>{{ photo.title }}</h5></a>
+                <h6>{{ photo.description }}</h6>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
 {% endblock %}

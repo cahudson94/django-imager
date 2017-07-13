@@ -84,11 +84,20 @@ def library_view(request):
                   {'photos': photos,
                    'albums': albums})
 
-def photo_view(request):
+
+def photo_view(request, photo_id):
     """The view for individual photos."""
-    photo = ImagerPhoto.objects.query()
+    photo = ImagerPhoto.objects.get(id=photo_id)
+    return render(
+        request,
+        'imagersite/photo.html',
+        context={'photo': photo})
 
 
-
-def album_view(request):
+def album_view(request, album_id):
     """The view for individual photos."""
+    album = ImagerPhoto.objects.get(id=album_id)
+    return render(
+        request,
+        'imagersite/album.html',
+        context={'album': album})
