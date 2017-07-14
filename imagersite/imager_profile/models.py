@@ -51,10 +51,6 @@ class ImagerProfile(models.Model):
     )
     job = models.CharField(default='', max_length=75)
     website = models.CharField(default='', max_length=255)
-    pub_pics = ImagerPhoto.objects.filter(published='PB').all().count()
-    pub_albums = ImagerAlbum.objects.filter(published='PB').all().count()
-    prv_pics = ImagerPhoto.objects.filter(published='PV').all().count()
-    prv_albums = ImagerAlbum.objects.filter(published='PV').all().count()
     objects = models.Manager()
     active = ImageActiveProfile()
 

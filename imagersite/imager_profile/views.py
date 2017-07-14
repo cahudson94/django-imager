@@ -96,8 +96,10 @@ def photo_view(request, photo_id):
 
 def album_view(request, album_id):
     """The view for individual photos."""
-    album = ImagerPhoto.objects.get(id=album_id)
+    album = ImagerAlbum.objects.get(id=album_id)
+    # import pdb; pdb.set_trace()
+    photos = album.photos.all()
     return render(
         request,
         'imagersite/album.html',
-        context={'album': album})
+        context={'album': album, 'photos': photos})
