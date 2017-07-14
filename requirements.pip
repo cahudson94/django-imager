@@ -1,10 +1,14 @@
+appnope==0.1.0
+beautifulsoup4==4.6.0
+bs4==0.0.1
+coverage==4.4.1
 decorator==4.0.11
 Django==1.11.2
 django-location-field==2.0.3
 django-registration==2.2
 factory-boy==2.8.1
 Faker==0.7.17
-ipython
+ipython==6.1.0
 ipython-genutils==0.2.0
 jedi==0.10.2
 olefile==0.44
@@ -21,4 +25,3 @@ simplegeneric==0.8.1
 six==1.10.0
 traitlets==4.3.2
 wcwidth==0.1.7
--e git+https://github.com/mariocesar/sorl-thumbnail.git@7ce76bc1ef798a63cbf89b5df83de4da4b12e98d#egg=sorl_thumbnail

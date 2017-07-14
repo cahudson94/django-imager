@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 
 def home_view(request):
     """Home view for imager."""
-    context = {'bobs': 'groot'}
+    current_user = request.user
+    context = {'user': current_user}
     return render(request, 'imagersite/home.html', context=context)
 
 

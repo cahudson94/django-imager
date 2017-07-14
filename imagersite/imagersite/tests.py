@@ -57,9 +57,13 @@ class HomePageTests(TestCase):
         """Setup."""
         self.client = Client()
         self.user = User(username='cookiemonster',
-                         email='cookie@cookie.cookie',
-                         password='COOKIE')
+                         email='cookie@cookie.cookie')
+        self.user.set_password('COOKIE')
         self.user.save()
+
+    def login_helper(self, username, password):
+        """Log in using a post request."""
+        return self.client.post('/login/', {'username': username, 'password': password})
 
     def test_home_ok(self):
         """Test that home page is available to logged out user."""
@@ -71,6 +75,23 @@ class HomePageTests(TestCase):
         resp = self.client.get(reverse_lazy('home'))
         html = BeautifulSoup(resp.content, 'html.parser')
         self.assertTrue(html.find('img', {'src': '/static/random_def.jpg'}))
+
+    def test_home_page_no_logout_when_not_logged_in(self):
+        """Test logout not on homepage."""
+        response = self.client.get(reverse_lazy('home'))
+        self.assertFalse('logout' in response.content.decode())
+
+    def test_no_reg_button_when_logged_in(self):
+        """Registration button dissapears on login."""
+        self.login_helper('cookiemonster', 'COOKIE')
+        response = self.client.get(reverse_lazy('home'))
+        self.assertFalse('Register' in response.content.decode())
+        self.assertFalse('Login' in response.content.decode())
+
+    def test_login_has_form(self):
+        """Test login has a form."""
+        response = self.client.get("/login/")
+        self.assertTrue('form' in response.rendered_content)
 
 
 # class SinglePhotoTestCase(TestCase):
@@ -88,5 +109,4 @@ class HomePageTests(TestCase):
 
 
 # class SingleAlbumTestCase(TestCase):
-#     """Test for single album view."""
-
+#     """Test for single abum view."""l
