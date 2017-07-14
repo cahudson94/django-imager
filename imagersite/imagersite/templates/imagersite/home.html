@@ -9,7 +9,7 @@
     {% thumbnail random_photo.picture "900x450" as im %}
         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
     {% empty %}
-        <img src="{% static 'default_pic.jpg' %}">
+        <img src="{% static 'random_def.jpg' %}">
     {% endthumbnail %}
 </div>
 {% endblock %}

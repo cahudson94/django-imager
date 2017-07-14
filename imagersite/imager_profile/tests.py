@@ -2,7 +2,7 @@
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
 from imager_profile.models import ImagerProfile
-from django.urls import reverse
+from django.urls import reverse_lazy
 import factory
 
 
@@ -67,11 +67,6 @@ class LoginTestCase(TestCase):
         return self.client.post('/login', {'username': username,
                                            'password': password})
 
-    def test_home(self):
-        """Test that home page is available to logged out user."""
-        response = self.client.get(reverse('home'))
-        self.assertEqual(response.status_code, 200)
-
     def test_register(self):
         """Test registration is available, and redirects on post."""
         username = 'dino'
@@ -91,7 +86,7 @@ class LoginTestCase(TestCase):
 
         login changes auth.
         """
-        response = self.client.get(reverse('login'))
+        response = self.client.get(reverse_lazy('login'))
         self.assertEqual(response.status_code, 200)
         deckardcain = UserFactory(username='deckardcain', password='secret')
         self.login_helper('deckardcain', 'secret')
