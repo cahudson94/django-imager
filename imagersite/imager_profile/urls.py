@@ -1,11 +1,9 @@
-# from django.conf.urls import url
-# from django.shortcuts import render
-# from images.models import Images
+"""."""
+from django.conf.urls import url
+from imager_profile.views import profile_view, user_profile_view
 
-
-
-# urlpatterns = [
-#     url(r'^admin/', admin.site.urls),
-#     url(r'^login/', login_view, name='login'),
-#     url(r'^$', home_view, name='home')
-# ]
+urlpatterns = [
+    url(r'^$', profile_view, name='profile'),
+    url(r'^(?P<request_username>\w+\d*)/$',
+        user_profile_view, name='public_profile'),
+]

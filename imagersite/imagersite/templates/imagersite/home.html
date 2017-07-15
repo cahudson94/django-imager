@@ -6,10 +6,17 @@
 {% block body %}
 <div id='splash_photo'>
     <h1>Welcome!</h1>
-    {% thumbnail random_photo.picture "900x450" as im %}
-        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
-    {% empty %}
-        <img src="{% static 'random_def.jpg' %}">
-    {% endthumbnail %}
+    <img class="day_pic" src="
+    {% if random_photo %}
+        {{ random_photo.photo.url }}
+    {% else %}
+        {% static 'random_def.jpg' %}
+    {% endif %}
+    ">
+    <h4>{{ title }}</h4>
+    <h5>Posted: {{ date }}</h5>
+    <h5>Description: </h5>
+    <p>{{ description }}</p>
+    <h5>Uploaded by: <a href="{% url 'public_profile' request_username=random_user%}">{{ random_user }}</a></h5>
 </div>
 {% endblock %}

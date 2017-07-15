@@ -37,8 +37,8 @@ class ImagerProfile(models.Model):
     """A profile for user Django imager app."""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    city = models.CharField(default='', max_length=25)
-    state = models.CharField(default='', max_length=2)
+    city = models.CharField(default='Seattle', max_length=25)
+    state = models.CharField(default='WA', max_length=2)
     pic = models.ImageField(ImagerPhoto, upload_to='profile_pics')
     camera_type = models.CharField(
         max_length=2,
@@ -50,7 +50,7 @@ class ImagerProfile(models.Model):
         default='CR'
     )
     job = models.CharField(default='', max_length=75)
-    website = models.CharField(default='', max_length=255)
+    website = models.URLField(default='', max_length=255)
     objects = models.Manager()
     active = ImageActiveProfile()
 

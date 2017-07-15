@@ -99,3 +99,7 @@ class LoginTestCase(TestCase):
         """
         response = self.client.get('/logout/', follow=False)
         self.assertEqual(response.status_code, 302)
+
+
+class PublicProfileTestCase(TestCase):
+    """Test for content of public profiles."""
