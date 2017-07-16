@@ -4,6 +4,7 @@ from imager_profile.models import ImagerProfile
 from imager_images.models import ImagerPhoto, ImagerAlbum
 from django.contrib.auth.models import User
 from random import randint
+import datetime
 
 
 def home_view(request):
@@ -19,6 +20,10 @@ def home_view(request):
         user = random_photo.user.username
     else:
         random_photo = None
+        title = 'Default'
+        description = 'There are no uploaded pictures.'
+        date_uploaded = datetime.datetime.now()
+        user = ''
     context = {'user': current_user,
                'random_photo': random_photo,
                'title': title,

@@ -1,8 +1,9 @@
 """Test file for the images app."""
-from django.test import TestCase, Client, RequestFactory
+from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from django.core.files.uploadedfile import SimpleUploadedFile
 from imager_images.models import ImagerPhoto, ImagerAlbum
+from django.urls import reverse_lazy
+from bs4 import BeautifulSoup
 import factory
 
 
@@ -110,3 +111,40 @@ class AlbumTestCase(TestCase):
         album = ImagerAlbum.objects.first()
         image.albums.add(album)
         self.assertTrue(image.albums.count() == 1)
+
+
+class LibraryTestCase(TestCase):
+    """Test library view has photos and albums."""
+
+    def setUp(self):
+        """Setup."""
+        self.client = Client()
+        self.user = User(username='deckardcain',
+                         email='deck@rd.cain')
+        self.user.set_password('secret')
+        self.user.save()
+
+        self.photos = [PhotoFactory.create() for i in range(20)]
+        self.album = AlbumFactory.create()
+        photos = ImagerPhoto.objects.all()
+        album = ImagerAlbum.objects.first()
+        for photo in photos:
+            photo.albums.add(album)
+            self.user.photos.add(photo)
+        self.user.albums.add(album)
+        self.user.save()
+
+    def login_helper(self, username, password):
+        """Log in using a post request."""
+        return self.client.post(reverse_lazy('login'),
+                                {'username': username,
+                                 'password': password},
+                                follow=True)
+
+    def test_library_has_users_content(self):
+        """Test that users albums and photos are present."""
+        self.login_helper('deckardcain', 'secret')
+        response = self.client.get(reverse_lazy('library'))
+        html = BeautifulSoup(response.content, 'html.parser')
+        self.assertEqual(21, len(html.findAll('h6')))
+        self.assertTrue(html.find('img', {'src': '/static/black.png'}))

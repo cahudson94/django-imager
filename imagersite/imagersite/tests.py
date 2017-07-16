@@ -1,7 +1,6 @@
 """Test file for the urls and views."""
-from django.test import TestCase, Client, RequestFactory
+from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from django.core.files.uploadedfile import SimpleUploadedFile
 from imager_images.models import ImagerPhoto, ImagerAlbum
 from django.urls import reverse_lazy
 from bs4 import BeautifulSoup
@@ -63,7 +62,9 @@ class HomePageTests(TestCase):
 
     def login_helper(self, username, password):
         """Log in using a post request."""
-        return self.client.post('/login/', {'username': username, 'password': password})
+        return self.client.post(reverse_lazy('login'),
+                                {'username': username,
+                                 'password': password})
 
     def test_home_ok(self):
         """Test that home page is available to logged out user."""
@@ -87,26 +88,3 @@ class HomePageTests(TestCase):
         response = self.client.get(reverse_lazy('home'))
         self.assertFalse('Register' in response.content.decode())
         self.assertFalse('Login' in response.content.decode())
-
-    def test_login_has_form(self):
-        """Test login has a form."""
-        response = self.client.get("/login/")
-        self.assertTrue('form' in response.rendered_content)
-
-
-# class SinglePhotoTestCase(TestCase):
-#     """Test for single photo view."""
-
-#     def setUp(self):
-#         """Set up users and photos for testing.."""
-#         self.user = UserFactory.create()
-#         self.photo = PhotoFactory.create()
-#         self.client = Client()
-
-#     def test_one_image_on_page(self):
-#         """Test that the page has one image."""
-#         resp = self.client.get(reverse_lazy('photo'))
-
-
-# class SingleAlbumTestCase(TestCase):
-#     """Test for single abum view."""l
