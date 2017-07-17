@@ -1,52 +1,12 @@
 """Test file for the urls and views."""
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from imager_images.models import ImagerPhoto, ImagerAlbum
 from django.urls import reverse_lazy
 from bs4 import BeautifulSoup
-import factory
+from django.conf import settings
+import os
 
-
-class UserFactory(factory.django.DjangoModelFactory):
-    """Generate users for testing."""
-
-    class Meta:
-        """Meta info."""
-
-        model = User
-
-    username = factory.Sequence(lambda n: "User number {}".format(n))
-    email = factory.LazyAttribute(
-        lambda x: "{}@example.com".format(x.username.replace(" ", ""))
-    )
-
-
-class PhotoFactory(factory.django.DjangoModelFactory):
-    """Generate photos for testing."""
-
-    class Meta:
-        """Meta info."""
-
-        model = ImagerPhoto
-
-    user = factory.SubFactory(UserFactory)
-    title = factory.Sequence(lambda n: "Photo number {}".format(n))
-    description = factory.LazyAttribute(
-        lambda a: '{} is confirmed a photo'.format(a.title))
-
-
-class AlbumFactory(factory.django.DjangoModelFactory):
-    """Generate albums for testing."""
-
-    class Meta:
-        """Meta info."""
-
-        model = ImagerAlbum
-
-    user = factory.SubFactory(UserFactory)
-    title = factory.Sequence(lambda n: "Album number {}".format(n))
-    description = factory.LazyAttribute(
-        lambda a: '{} is confirmed an album'.format(a.title))
+media = os.path.join(settings.MEDIA_ROOT)
 
 
 class HomePageTests(TestCase):
@@ -88,3 +48,4 @@ class HomePageTests(TestCase):
         response = self.client.get(reverse_lazy('home'))
         self.assertFalse('Register' in response.content.decode())
         self.assertFalse('Login' in response.content.decode())
+        os.system('mv ' + media + '/cache_real/ ' + media + '/cache/')
