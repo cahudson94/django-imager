@@ -91,4 +91,4 @@ class PhotoUpdate(UpdateView):
 
 class PhotoDelete(DeleteView):
     model = ImagerPhoto
-    success_url = '/profile/library/'
+success_url = '/profile/library/'

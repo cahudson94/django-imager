@@ -2,7 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.encoding import python_2_unicode_compatible
-import random
+from sorl.thumbnail import ImageField
 
 
 PUBLISHED_STATUS = (
@@ -12,14 +12,6 @@ PUBLISHED_STATUS = (
 )
 
 
-class RandomPhotoManager(models.Manager):
-    def get_queryset(self):
-        queryset = super(RandomPhotoManager, self).get_queryset().filter(published='PB')
-        queryset = queryset.values_list('id', flat=True)
-        photo = random.choice(queryset)
-        return super(RandomPhotoManager, self).get_queryset().filter(id=photo)
-
-
 @python_2_unicode_compatible
 class ImagerPhoto(models.Model):
     """Photo models for Django imager app."""
@@ -27,7 +19,7 @@ class ImagerPhoto(models.Model):
     user = models.ForeignKey(User,
                              on_delete=models.CASCADE,
                              related_name='photos')
-    photo = models.ImageField(upload_to='images')
+    photo = ImageField(upload_to='images')
     published = models.CharField(
         max_length=2,
         choices=PUBLISHED_STATUS,
@@ -47,8 +39,10 @@ class ImagerAlbum(models.Model):
                              on_delete=models.CASCADE,
                              related_name='albums')
     title = models.CharField(default='', max_length=50)
-    photos = models.ManyToManyField(ImagerPhoto, default='', related_name='albums')
-    cover = models.ForeignKey(ImagerPhoto, null=True, related_name='+')
+    photos = models.ManyToManyField(ImagerPhoto, blank=True,
+                                    default='', related_name='albums')
+    cover = models.ForeignKey(ImagerPhoto, blank=True, null=True,
+                              related_name='+')
     published = models.CharField(
         max_length=2,
         choices=PUBLISHED_STATUS,

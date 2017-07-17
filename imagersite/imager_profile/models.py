@@ -37,8 +37,8 @@ class ImagerProfile(models.Model):
     """A profile for user Django imager app."""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    city = models.CharField(default='', max_length=25)
-    state = models.CharField(default='', max_length=2)
+    city = models.CharField(default='Seattle', max_length=25)
+    state = models.CharField(default='WA', max_length=2)
     pic = models.ImageField(ImagerPhoto, upload_to='profile_pics')
     camera_type = models.CharField(
         max_length=2,
@@ -50,35 +50,13 @@ class ImagerProfile(models.Model):
         default='CR'
     )
     job = models.CharField(default='', max_length=75)
-    website = models.CharField(default='', max_length=255)
-    pub_pics = ImagerPhoto.objects.filter(published='PB').all().count()
-    pub_albums = ImagerAlbum.objects.filter(published='PB').all().count()
-    prv_pics = ImagerPhoto.objects.filter(published='PV').all().count()
-    prv_albums = ImagerAlbum.objects.filter(published='PV').all().count()
+    website = models.URLField(default='', max_length=255)
     objects = models.Manager()
     active = ImageActiveProfile()
 
     def active(self):
         """."""
         return self.user.is_active
-
-    # def __repr__(self):
-    #     """."""
-    #     return """
-    # username: {}
-    # location: {}
-    # camera_type: {}
-    # photography_style: {}
-    # job: {}
-    # website: {}
-    #     """.format(
-    #         self.user.username,
-    #         self.location,
-    #         self. camera_type,
-    #         self.photography_style,
-    #         self.job,
-    #         self.website
-    #     )
 
 
 @receiver(post_save, sender=User)

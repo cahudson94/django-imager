@@ -9,15 +9,13 @@ GENERAL
 }
 
 
-
-
 /* ***************************************************************************
 NAV
 *************************************************************************** */
 .nav-bar {
     color: #CECECE;
     background-color: #333;
-    position: fixed
+    position: fixed;
     top: 0;
     width: 100%;
     z-index: 99;
@@ -31,6 +29,7 @@ NAV
     position: fixed;
     top: 0;
     right: 0;
+    padding: 10px 10px;
 }
 
 .nav-bar h4 {
@@ -59,24 +58,6 @@ NAV
     display: inline-block;
 }
 
-/* ***************************************************************************
-HERO
-*************************************************************************** */
-.hero {
-    color: #CECECE;
-    background-color: #333;
-    padding: 10px 80px;
-}
-
-.wrap {
-    padding-top: 65px;
-}
-
-.columns h2 {
-    font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
-}
-
-
 
 /* ***************************************************************************
 MAIN SECTION
@@ -85,141 +66,71 @@ MAIN SECTION
     margin-top: 0;
 }
 
-
-#background {
-    background-image: url(main_back.jpg);
-    background-size: cover;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    position: relative;
-    height: 100%;
-}
-
 .body {
-    background-color: #333;
+    background-color: white;
     opacity: 0.85;
     background-blend-mode: overlay;
     padding: 25px 25px 15px 25px;
 }
 
-.body h1 {
+.library {
+    padding: 80px 25px 15px 25px;
+}
+
+.album-section {
+    padding-bottom: 25px;
     text-align: center;
-    color: white;
 }
 
-.body h3 {
+.album-section li {
+    display: inline-grid;
+    padding-right: 15px;
+}
+
+.photo-section {
+    padding-bottom: 25px;
     text-align: center;
-    color: white;
 }
 
-.button {
-    float:right;
-    height: 40px;
-    width: 140px;
-    padding: 8px;
+.photo-section li {
+    display: inline-grid;
+    padding-right: 15px;
 }
 
-.button a {
-    color: white;
-    font-size: 22px;
+.prof-pic {
+    max-height: 70%;
+    max-width: 50%;
 }
 
-.Confirm {
-    float: left;
+#splash_photo {
+    padding-top: 80px;
+    text-align: center;
 }
 
-.edit {
-    width: 100px;
+#splash_photo h1 {
+    padding-bottom: 10px;
 }
 
-.pagination {
-    color: white;
-    display: inline;
+#splash_photo img {
+    max-height: 80%;
+    max-width: 90%;
 }
 
-.pagination li {
-    padding: 0 3px;
+.register {
+    padding-top: 80px;
 }
 
-.pagination li a {
-    color: white;
+.photo {
+    max-width: 50%;
 }
 
-.pagination li a:hover {
-    color: black;
+.photo-page {
+    padding: 90px 0px 15px;
+    text-align: center;
 }
 
-.active {
-    color: #87FFFF;
-}
-
-.entries {
-    color: white;
-    padding: 0px 25px;
-    min-height: 1530px;
-    font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
-}
-
-.entries a {
-    max-width: 600px;
-    color: white;
-}
-
-.entries h3 {
-    text-align: left;
-    max-width: 600px;
-    font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
-}
-
-.titlearea textarea {
-    width: 100%;
-    height: 35px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    resize: none;
-    color: black;
-
-}
-
-
-.infoarea {
-    color: black;
-}
-
-
-.infoarea textarea {
-    width: 100%;
-    height: 35px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    resize: none;
-}
-
-
-.bodyarea textarea {
-    width: 100%;
-    height: 150px;
-    padding: 12px 20px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    resize: none;
-}
-
-.columns h2 {
-    color: white;
-}
-
-video {
-    display: block;
-    margin: 0 auto;
+.registration {
+    padding: 100px 20px;
 }
 
 
@@ -266,15 +177,4 @@ footer .column {
 
 .column h5 {
     font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
-}
-
-/* ***************************************************************************
-MEDIA QUERY
-*************************************************************************** */
-
-@media (min-width: 639px) {
-
-    .nav-desktop {
-        display: none;
-    }
 }
