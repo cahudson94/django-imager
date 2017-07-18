@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'location_field.apps.DefaultConfig',
     'imager_profile',
     'imagersite',
     'imager_images',
