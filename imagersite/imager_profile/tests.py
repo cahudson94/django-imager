@@ -141,6 +141,7 @@ class ProfileTestCase(TestCase):
 
     def test_public_profile_has_content(self):
         """Test that public profile has public count and 200 ok."""
+        self.client.force_login(self.user)
         response = self.client.get(reverse_lazy('public_profile',
                                    kwargs={'request_username': 'deckardcain'}))
         self.assertFalse(b'Private' in response.content)

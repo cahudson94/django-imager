@@ -84,6 +84,7 @@ MAIN SECTION
 
 .album-section li {
     display: inline-grid;
+    text-align: center;
     padding-right: 15px;
 }
 
@@ -129,10 +130,43 @@ MAIN SECTION
     text-align: center;
 }
 
+.album-page {
+    padding: 90px 0px 15px;
+    text-align: center;
+}
+
 .registration {
     padding: 100px 20px;
 }
 
+
+.forms {
+    padding: 90px 0px 15px;
+}
+
+.button {
+    float:right;
+    width: 9%;
+    padding: 8px;
+    min-width: 60px;
+}
+
+#center {
+    padding-top: 10px;
+    float: unset;
+    height: 5%;
+    width: 20%;
+    font-size: 40%;
+    min-width: 60px;
+}
+
+.profile-button {
+    padding-top: 25px;
+}
+
+.title {
+    max-width: 150px;
+}
 
 /* ***************************************************************************
 FOOTER
