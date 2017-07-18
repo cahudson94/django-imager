@@ -20,6 +20,10 @@ services:
 after_success:
   - coveralls
 
+
+before_script:
+- psql -c "CREATE DATABASE testing_db;" -U postgres
+
 # command to run tests
 script:
   - python imagersite/manage.py migrate
