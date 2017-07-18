@@ -194,6 +194,22 @@ class LibraryTestCase(TestCase):
                                                 kwargs={'photo_id': pic_id}))
         self.assertTrue(b'photo-page' in response.content)
 
+    def test_bad_image_request_page(self):
+        """Test 404 on pk of image that does not exist."""
+        self.login_helper('deckardcain', 'secret')
+        pic_id = ImagerPhoto.objects.last().id + 100
+        response = self.client.get(reverse_lazy('photo',
+                                                kwargs={'pk': pic_id}))
+        self.assertTrue(response.status_code == 404)
+
+    def test_bad_album_request_page(self):
+        """Test 404 on pk of album that does not exist."""
+        self.login_helper('deckardcain', 'secret')
+        alb_id = ImagerAlbum.objects.last().id + 100
+        response = self.client.get(reverse_lazy('album',
+                                                kwargs={'pk': alb_id}))
+        self.assertTrue(response.status_code == 404)
+
     def test_individual_album_page_contents(self):
         """Test that the single album page has content."""
         self.login_helper('deckardcain', 'secret')
