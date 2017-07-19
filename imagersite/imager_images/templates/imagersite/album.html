@@ -1,0 +1,23 @@
+{% extends 'imagersite/base.html' %}
+{% load thumbnail %}
+{% block title %}{{ album.title }}{% endblock %}
+{% block body %}
+<div class="album-page">
+    <div class="photo-section">
+        <h1>{{ album.title }}</h1>
+        <ul>
+            {% if photos %}
+                {% for photo in photos %}
+                <li>
+                    {% thumbnail photo.photo "150x150" crop="center" as im %}
+                        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                    {% endthumbnail %}
+                    <a href="/images/photos/{{ photo.id }}"><h5>{{ photo.title }}</h5></a>
+                </li>
+                {% endfor %}
+            {% else %}
+                <h1>You have no photos in this Album!</h1>
+            {% endif %}
+        </ul>
+    </div>
+{% endblock %}

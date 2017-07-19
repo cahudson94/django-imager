@@ -1,0 +1,214 @@
+
+/* ***************************************************************************
+GENERAL
+*************************************************************************** */
+.wrap {
+    width: 90%;
+    max-width: 1260px;
+    margin: 0 auto;
+}
+
+
+/* ***************************************************************************
+NAV
+*************************************************************************** */
+.nav-bar {
+    color: #CECECE;
+    background-color: #333;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 99;
+}
+
+.left {
+    padding: 10px 20px;
+}
+
+.right {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 10px 10px;
+}
+
+.nav-bar h4 {
+    font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
+}
+
+.menu {
+    position: relative;
+}
+
+.menu li a {
+    color: #CECECE;
+    background-color: #333;
+}
+
+
+.menu li a:hover {
+    background-color: rgba(255,255,255, 0.1);
+}
+
+.menu-text a {
+    color: white;
+}
+
+.menu-text {
+    display: inline-block;
+}
+
+
+/* ***************************************************************************
+MAIN SECTION
+*************************************************************************** */
+.main {
+    margin-top: 0;
+}
+
+.body {
+    background-color: white;
+    opacity: 0.85;
+    background-blend-mode: overlay;
+    padding: 25px 25px 15px 25px;
+}
+
+.library {
+    padding: 80px 25px 15px 25px;
+}
+
+.album-section {
+    padding-bottom: 25px;
+    text-align: center;
+}
+
+.album-section li {
+    display: inline-grid;
+    text-align: center;
+    padding-right: 15px;
+}
+
+.photo-section {
+    padding-bottom: 25px;
+    text-align: center;
+}
+
+.photo-section li {
+    display: inline-grid;
+    padding-right: 15px;
+}
+
+.prof-pic {
+    max-height: 70%;
+    max-width: 50%;
+}
+
+#splash_photo {
+    padding-top: 80px;
+    text-align: center;
+}
+
+#splash_photo h1 {
+    padding-bottom: 10px;
+}
+
+#splash_photo img {
+    max-height: 80%;
+    max-width: 90%;
+}
+
+.register {
+    padding-top: 80px;
+}
+
+.photo {
+    max-width: 50%;
+}
+
+.photo-page {
+    padding: 90px 0px 15px;
+    text-align: center;
+}
+
+.album-page {
+    padding: 90px 0px 15px;
+    text-align: center;
+}
+
+.registration {
+    padding: 100px 20px;
+}
+
+
+.forms {
+    padding: 90px 0px 15px;
+}
+
+.button {
+    float:right;
+    width: 9%;
+    padding: 8px;
+    min-width: 60px;
+}
+
+#center {
+    padding-top: 10px;
+    float: unset;
+    height: 5%;
+    width: 20%;
+    font-size: 40%;
+    min-width: 60px;
+}
+
+.profile-button {
+    padding-top: 25px;
+}
+
+.title {
+    max-width: 150px;
+}
+
+/* ***************************************************************************
+FOOTER
+*************************************************************************** */
+
+footer {
+    color: #CECECE;
+    height: 140px;
+    width: 100%;
+    background-color: #333;
+    padding-bottom: 50px;
+}
+
+footer a {
+    display: block;
+    margin-bottom: 3px;
+}
+
+footer h5 {
+    margin-top: -40px;
+}
+
+
+footer hr {
+    margin-bottom: 10px;
+}
+
+footer .column {
+    margin-top: -10px;
+}
+
+.column {
+    text-align: center;
+    font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
+}
+
+
+.column a {
+    text-align: center;
+    padding-top: 7px;
+}
+
+.column h5 {
+    font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
+}

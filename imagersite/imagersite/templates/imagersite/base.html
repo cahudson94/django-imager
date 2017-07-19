@@ -1,12 +1,35 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}{% endblock %}</title>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'foundation.css' %}">
+  <link rel="stylesheet" href="{% static 'app.css' %}">
 </head>
 <body>
-  <p>You found our site!
-     Now get out!</p>
+  <div class="nav-bar">
+    <div class="left">
+      <div class="menu-text"><h4><a href="{% url 'home' %}">Home</a></h4></div>
+      {% if user.is_authenticated %}
+      <div class="menu-text"><h4><a href="{% url 'profile' %}">Profile</a></h4></div>
+      <div class="menu-text"><h4><a href="{% url 'library' %}">Library</a></h4></div>
+      {% endif %}
+    </div>
+    <div class="right">
+      {% if user.is_authenticated %}
+      <div class="menu-text"><h4><a href="{% url 'logout' %}">Logout</a></h4></div>
+      {% else %}
+      <div class="menu-text"><h4><a href="/accounts/register">Register</a></h4></div>
+      <div class="menu-text"><h4><a href="{% url 'login' %}">Login</a></h4></div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="body">
      {% block body %}
      {% endblock %}
+  </div>
 </body>
 </html>

@@ -1,0 +1,39 @@
+{% extends 'imagersite/base.html' %}
+{% load static %}
+{% load thumbnail %}
+{% block title %}Library{% endblock %}
+{% block body %}
+<div class="library">
+    <div class="album-section">
+        <h1>Your Albums</h1>
+        <ul>
+            {% for album in albums %}
+            <li>
+                {% thumbnail album.cover.photo "150x150" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                {% empty %}
+                    <img src="{% static 'black.png' %}" height="150" width="150"/>
+                {% endthumbnail %}
+                <a class="title" href="/images/albums/{{ album.id }}"><h5 class="title">{{ album.title }}</h5></a>
+            </li>
+        {% endfor %}
+        </ul>
+        <h2 class="profile-button"><a class="button" id="center" href="{% url 'add_album' %}">Add Album</a></h2>
+    </div>
+
+    <div class="photo-section">
+        <h1>Your Photos</h1>
+        <ul>
+            {% for photo in photos %}
+            <li>
+                {% thumbnail photo.photo "150x150" crop="center" as pic %}
+                    <img src="{{ pic.url }}" width="{{ pic.width }}" height="{{ pic.height }}"></img>
+                {% endthumbnail %}
+                <a class="title" href="/images/photos/{{ photo.id }}"><h5>{{ photo.title }}</h5></a>
+            </li>
+        {% endfor %}
+        </ul>
+        <h2 class="profile-button"><a class="button" id="center" href="{% url 'add_photo' %}">Add Photo</a></h2>
+    </div>
+</div>
+{% endblock %}

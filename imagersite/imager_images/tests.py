@@ -1,8 +1,19 @@
-from django.test import TestCase, Client, RequestFactory
+"""Test file for the images app."""
+from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from django.core.files.uploadedfile import SimpleUploadedFile
 from imager_images.models import ImagerPhoto, ImagerAlbum
+from django.urls import reverse_lazy
+from bs4 import BeautifulSoup
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.conf import settings
 import factory
+import os
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+MEDIA_ROOT = settings.MEDIA_ROOT
+media = os.path.join(MEDIA_ROOT)
+os.system('mv ' + media + '/cache/ ' + media + '/cache_real//')
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -31,6 +42,14 @@ class PhotoFactory(factory.django.DjangoModelFactory):
     title = factory.Sequence(lambda n: "Photo number {}".format(n))
     description = factory.LazyAttribute(
         lambda a: '{} is confirmed a photo'.format(a.title))
+    photo = SimpleUploadedFile(
+        name='sample.jpg',
+        content=open(os.path.join(BASE_DIR,
+                                  'static',
+                                  'random_def.jpg'
+                                  ), 'rb').read(),
+        content_type='image/jpeg'
+    )
 
 
 class AlbumFactory(factory.django.DjangoModelFactory):
@@ -55,6 +74,12 @@ class PhotoTestCase(TestCase):
         self.user = [UserFactory.create() for i in range(20)]
         self.photos = [PhotoFactory.create() for i in range(20)]
 
+    def tearDown(self):
+        """Teardown when tests complete."""
+        images_del = os.path.join(MEDIA_ROOT, 'images', 'sample*.jpg')
+        os.system('rm -rf ' + images_del)
+        os.system('rm -rf ' + media + '/cache/')
+
     def test_photo_made_when_saved(self):
         """Test photos are added to the database."""
         self.assertTrue(ImagerPhoto.objects.count() == 20)
@@ -75,6 +100,7 @@ class PhotoTestCase(TestCase):
         image.published = 'PV'
         image.save()
         self.assertTrue(ImagerPhoto.objects.first().published == "PV")
+        self.tearDown()
 
 
 class AlbumTestCase(TestCase):
@@ -85,6 +111,12 @@ class AlbumTestCase(TestCase):
         self.users = [UserFactory.create() for i in range(20)]
         self.photos = [PhotoFactory.create() for i in range(20)]
         self.albums = [AlbumFactory.create() for i in range(20)]
+
+    def tearDown(self):
+        """Teardown when tests complete."""
+        images_del = os.path.join(MEDIA_ROOT, 'images', 'sample*.jpg')
+        os.system('rm -rf ' + images_del)
+        os.system('rm -rf ' + media + '/cache/')
 
     def test_image_no_album(self):
         """Test that the image is not in an album."""
@@ -101,7 +133,7 @@ class AlbumTestCase(TestCase):
     def test_album_has_no_image_inside(self):
         """Test that an album has no image inside of it."""
         album = ImagerAlbum.objects.first()
-        self.assertTrue(album.photo.count() == 0)
+        self.assertTrue(album.photos.count() == 0)
 
     def test_album_has_image_inside(self):
         """Test that an album has an image inside of it."""
@@ -109,3 +141,189 @@ class AlbumTestCase(TestCase):
         album = ImagerAlbum.objects.first()
         image.albums.add(album)
         self.assertTrue(image.albums.count() == 1)
+        self.tearDown()
+
+
+class LibraryTestCase(TestCase):
+    """Test library view has photos and albums."""
+
+    def setUp(self):
+        """Setup."""
+        self.client = Client()
+        self.user = User(username='deckardcain',
+                         email='deck@rd.cain')
+        self.user.set_password('secret')
+        self.user.save()
+
+        self.photos = [PhotoFactory.create() for i in range(20)]
+        self.photo = PhotoFactory.create()
+        self.album = AlbumFactory.create()
+        photos = ImagerPhoto.objects.all()
+        album = ImagerAlbum.objects.first()
+        for photo in photos:
+            photo.albums.add(album)
+            self.user.photos.add(photo)
+        self.user.albums.add(album)
+        self.user.save()
+
+    def tearDown(self):
+        """Teardown when tests complete."""
+        images_del = os.path.join(MEDIA_ROOT, 'images', 'sample*.jpg')
+        os.system('rm -rf ' + images_del)
+        os.system('rm -rf ' + media + '/cache/')
+
+    def login_helper(self, username, password):
+        """Log in using a post request."""
+        return self.client.post(reverse_lazy('login'),
+                                {'username': username,
+                                 'password': password},
+                                follow=True)
+
+    def test_library_has_users_content(self):
+        """Test that users albums and photos are present."""
+        self.login_helper('deckardcain', 'secret')
+        response = self.client.get(reverse_lazy('library'))
+        html = BeautifulSoup(response.content, 'html.parser')
+        self.assertEqual(22, len(html.findAll('h5')))
+        self.assertTrue(html.find('img', {'src': '/static/black.png'}))
+
+    def test_individual_photo_page_contents(self):
+        """Test that the single photo page has content."""
+        self.login_helper('deckardcain', 'secret')
+        pic_id = ImagerPhoto.objects.first().id
+        response = self.client.get(reverse_lazy('photo',
+                                                kwargs={'pk': pic_id}))
+        self.assertTrue(b'photo-page' in response.content)
+
+    def test_bad_photo_request_page(self):
+        """Test 404 on pk of photo that does not exist."""
+        self.login_helper('deckardcain', 'secret')
+        pic_id = ImagerPhoto.objects.last().id + 100
+        response = self.client.get(reverse_lazy('photo',
+                                                kwargs={'pk': pic_id}))
+        self.assertTrue(response.status_code == 404)
+
+    def test_bad_album_request_page(self):
+        """Test 404 on pk of album that does not exist."""
+        self.login_helper('deckardcain', 'secret')
+        alb_id = ImagerAlbum.objects.last().id + 100
+        response = self.client.get(reverse_lazy('album',
+                                                kwargs={'pk': alb_id}))
+        self.assertTrue(response.status_code == 404)
+
+    def test_add_photo_adds_photo(self):
+        """Test that a new photo is added on form submit."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('add_photo'))
+        sample_img = SimpleUploadedFile(
+            name='sample.jpg',
+            content=open(os.path.join(BASE_DIR,
+                                      'static',
+                                      'random_def.jpg'
+                                      ), 'rb').read(),
+            content_type='image/jpeg'
+        )
+        data = {
+            'csrftoken': response.cookies['csrftoken'].value,
+            'photo': sample_img,
+            'title': 'A pic for you!',
+            'description': 'The best descrip...',
+            'published': 'PV',
+        }
+        self.client.post(reverse_lazy('add_photo'), data)
+        self.assertTrue(ImagerPhoto.objects.last().title == data['title'])
+        self.assertTrue(ImagerPhoto.objects.last().description == data['description'])
+
+    def test_add_album_adds_album(self):
+        """Test that a new album is added on form submit."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('add_album'))
+        data = {
+            'csrftoken': response.cookies['csrftoken'].value,
+            'title': 'An album for you!',
+            'description': '...tion you have ever seen!',
+            'published': 'PV',
+        }
+        self.client.post(reverse_lazy('add_album'), data)
+        self.assertTrue(ImagerAlbum.objects.last().title == data['title'])
+        self.assertTrue(ImagerAlbum.objects.last().description == data['description'])
+
+    def test_successful_add_photo_redirects(self):
+        """Test redirect when photo is added on form submit."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('add_photo'))
+        sample_img = SimpleUploadedFile(
+            name='sample.jpg',
+            content=open(os.path.join(BASE_DIR,
+                                      'static',
+                                      'random_def.jpg'
+                                      ), 'rb').read(),
+            content_type='image/jpeg'
+        )
+        data = {
+            'csrftoken': response.cookies['csrftoken'].value,
+            'photo': sample_img,
+            'title': 'A pic for you!',
+            'description': 'The best descrip...',
+            'published': 'PV',
+        }
+        response = self.client.post(reverse_lazy('add_photo'), data, follow=False)
+        self.assertTrue(response.status_code == 302)
+        self.assertTrue(response.url == reverse_lazy('library'))
+
+    def test_successful_add_album_redirects(self):
+        """Test redirect when album is added on form submit."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('add_album'))
+        data = {
+            'csrftoken': response.cookies['csrftoken'].value,
+            'title': 'An album for you!',
+            'description': '...tion you have ever seen!',
+            'published': 'PV',
+        }
+        response = self.client.post(reverse_lazy('add_album'), data, follow=False)
+        self.assertTrue(response.status_code == 302)
+        self.assertTrue(response.url == reverse_lazy('library'))
+
+    def test_bad_add_photo_stays(self):
+        """Test no redirect when form submit incomplete."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('add_photo'))
+        sample_img = SimpleUploadedFile(
+            name='sample.jpg',
+            content=open(os.path.join(BASE_DIR,
+                                      'static',
+                                      'random_def.jpg'
+                                      ), 'rb').read(),
+            content_type='image/jpeg'
+        )
+        data = {
+            'csrftoken': response.cookies['csrftoken'].value,
+            'photo': sample_img,
+            'description': 'The best descrip...',
+        }
+        response = self.client.post(reverse_lazy('add_photo'), data)
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue('imager_images/imagerphoto_form.html' in response.template_name)
+
+    def test_bad_add_album_stays(self):
+        """Test no redirect when form submit incomplete."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('add_album'))
+        data = {
+            'csrftoken': response.cookies['csrftoken'].value,
+            'title': 'An album for you!',
+        }
+        response = self.client.post(reverse_lazy('add_album'), data)
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue('imager_images/imageralbum_form.html' in response.template_name)
+
+    def test_individual_album_page_contents(self):
+        """Test that the single album page has content."""
+        self.login_helper('deckardcain', 'secret')
+        alb_id = ImagerAlbum.objects.first().id
+        response = self.client.get(reverse_lazy('album',
+                                                kwargs={'pk': alb_id}))
+        html = BeautifulSoup(response.content, 'html.parser')
+        self.assertEqual(21, len(html.findAll('h5')))
+        self.tearDown()
