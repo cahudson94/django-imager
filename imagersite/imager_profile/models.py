@@ -58,6 +58,15 @@ class ImagerProfile(models.Model):
         """."""
         return self.user.is_active
 
+    def __str__(self):
+        """."""
+        return """
+        username: {}
+        location: {}
+        job: {}
+        website: {}
+        """.format(self.user.username, (self.city + ', ' + self.state), self.job, self.website)
+
 
 @receiver(post_save, sender=User)
 def make_profile_for_new_user(sender, **kwargs):

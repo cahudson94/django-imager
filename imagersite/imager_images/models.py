@@ -30,6 +30,10 @@ class ImagerPhoto(models.Model):
     description = models.TextField()
     title = models.CharField(default='', max_length=50)
 
+    def __str__(self):
+        """Represent."""
+        return "{}".format(self.title)
+
 
 @python_2_unicode_compatible
 class ImagerAlbum(models.Model):
@@ -51,3 +55,7 @@ class ImagerAlbum(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     date_published = models.DateTimeField(blank=True, null=True)
     description = models.TextField()
+
+    def __str__(self):
+        """Represent."""
+        return "{}".format(self.title)

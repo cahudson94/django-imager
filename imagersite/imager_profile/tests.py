@@ -138,10 +138,3 @@ class ProfileTestCase(TestCase):
         self.login_helper('deckardcain', 'secret')
         response = self.client.get(reverse_lazy('profile'))
         self.assertTrue(b'Private' in response.content)
-
-    def test_public_profile_has_content(self):
-        """Test that public profile has public count and 200 ok."""
-        response = self.client.get(reverse_lazy('public_profile',
-                                   kwargs={'request_username': 'deckardcain'}))
-        self.assertFalse(b'Private' in response.content)
-        self.assertTrue(b'Public' in response.content)
