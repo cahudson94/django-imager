@@ -1,0 +1,37 @@
+{% extends 'imagersite/base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+<div class="wrap medium-up-2">
+  <h1>Welcome {{ username }}!</h1>
+  <div class="column">
+      <img class="prof-pic" src="
+      {% if pic %}
+          {{ pic.url }}
+      {% else %}
+          {% static 'default_pic.jpg' %}
+      {% endif %}"></img>
+      <li>Location: {{ location }}</li>
+      <li>Job: {{ job }}</li>
+      <li>Camera Type: {{ camera }}</li>
+      <li>Photography Style: {{ photostyle }}</li>
+      <li>Website: {{ website }}</li>
+  </div>
+  <div class="column">
+    <section>
+      <h2>Albums:</h2>
+      <li>Public Albums: {{ pub_albums }}</li>
+      <li>Private Albums: {{ prv_albums }}</li>
+    </section>
+
+    <section>
+      <h2>Pictures:</h2>
+      <li>Public Pics: {{ pub_pics }}</li>
+      <li>Private Pics: {{ prv_pics }}</li>
+    </section>
+  </div>
+</div>
+
+{% endblock %}
+

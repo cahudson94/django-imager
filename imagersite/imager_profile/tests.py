@@ -53,7 +53,7 @@ class ProfileTestCase(TestCase):
 
     def test_deletion_of_lives(self):
         """Delete that user, reduce user count."""
-        user = User.objects.filter(username='user50')
+        user = User.objects.last()
         user.delete()
         self.assertEquals(24, len(ImagerProfile.objects.all()))
 
@@ -62,8 +62,8 @@ class ProfileTestCase(TestCase):
         user = ImagerProfile.objects.first()
         user.job = 'Dinosaur wrangler'
         user.website = 'raptorrider.com'
-        user.camera_type = 'Canon'
-        user.photography_style = 'Landscape'
+        user.camera_type = 'CN'
+        user.photography_style = 'LS'
         user.save()
         self.assertTrue(ImagerProfile.objects.first().job, 'Dinosaur wrangler')
         self.assertTrue(ImagerProfile.objects.first().website, 'raptorrider.com')

@@ -3,7 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from location_field.models.plain import PlainLocationField
 from django.utils.encoding import python_2_unicode_compatible
 
 CAMERA_CHOICES = [
@@ -37,14 +36,14 @@ class ImagerProfile(models.Model):
     """A profile for user Django imager app."""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    city = models.CharField(max_length=255)
-    location = PlainLocationField(based_fields=['city'], zoom=7)
+    city = models.CharField(default='Seattle', max_length=25)
+    state = models.CharField(default='WA', max_length=2)
     camera_type = models.CharField(
         max_length=2,
         choices=CAMERA_CHOICES,
     )
     photography_style = models.CharField(
-        max_length=5,
+        max_length=2,
         choices=PHOTO_CHOICES,
         default='CR'
     )
@@ -57,23 +56,14 @@ class ImagerProfile(models.Model):
         """."""
         return self.user.is_active
 
-    def __repr__(self):
+    def __str__(self):
         """."""
         return """
-    username: {}
-    location: {}
-    camera_type: {}
-    photography_style: {}
-    job: {}
-    website: {}
-        """.format(
-            self.user.username,
-            self.location,
-            self. camera_type,
-            self.photography_style,
-            self.job,
-            self.website
-        )
+        username: {}
+        location: {}
+        job: {}
+        website: {}
+        """.format(self.user.username, (self.city + ', ' + self.state), self.job, self.website)
 
 
 @receiver(post_save, sender=User)

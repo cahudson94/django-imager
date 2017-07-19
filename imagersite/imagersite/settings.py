@@ -43,9 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'location_field.apps.DefaultConfig',
     'imager_profile',
     'imagersite',
+    'imager_images',
+    'sorl.thumbnail',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,12 @@ REGISTRATION_OPEN = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    '/var/www/static/'
+]
+
+MEDIA_URL = '/MEDIA/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')

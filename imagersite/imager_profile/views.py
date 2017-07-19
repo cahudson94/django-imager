@@ -12,4 +12,4 @@ def home_view(request):
 
 def account_view(request):
     """Registration view for imager."""
-    return render(request, 'imagersite/accounts.html')
+    return render(request, 'imagersite/registration_form.html')

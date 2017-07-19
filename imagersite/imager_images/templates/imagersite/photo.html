@@ -1,0 +1,12 @@
+{% extends 'imagersite/base.html' %}
+
+{% block title %}{{ photo.title }}{% endblock %}
+
+
+{% block body %}
+<div class='photo-page'>
+    <img class="photo" src="{{photo.photo.url}}">
+    <h1>{{ photo.title }}</h1>
+    <p> {{ photo.description }} </p>
+</div>
+{% endblock %}
