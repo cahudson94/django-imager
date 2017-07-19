@@ -1,22 +1,24 @@
 {% extends 'imagersite/base.html' %}
 {% block body %}
-  <h2>Get an Account</h2>
-  <form method='post'>
-    {% csrf_token %}
-    <ul>
-    {% for field in form %}
-      <li>
-        {{ field.label_tag }}
-        {{ field }}
-        {% if field.help_text %}
-          <div>{{ field.help_text |safe }}</div>
-        {% endif%}
-        {% for error in field.errors %}
-          <h4>{{ error }}</h4>
-        {% endfor %}
-      </li>
-    {% endfor %}
-    </ul>
-    <button type="submit">Sign up!</button>
-  </form>
+  <div class="register">
+    <h2>Get an Account</h2>
+    <form method='post'>
+      {% csrf_token %}
+      <ul>
+      {% for field in form %}
+        <li>
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            <div>{{ field.help_text |safe }}</div>
+          {% endif%}
+          {% for error in field.errors %}
+            <h4>{{ error }}</h4>
+          {% endfor %}
+        </li>
+      {% endfor %}
+      </ul>
+      <button type="submit">Sign up!</button>
+    </form>
+  </div>
 {% endblock %}

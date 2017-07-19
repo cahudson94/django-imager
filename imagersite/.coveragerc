@@ -2,6 +2,7 @@
 omit = 
     manage.py
     imagersite/wsgi.py
+    imager_profile/apps.py 
 
 source =
     imagersite

@@ -1,7 +1,16 @@
 {% extends 'imagersite/base.html' %}
+{% load static %}
+{% load thumbnail %}
 
-{% block title %}Home{% endblock %}
 
 {% block body %}
-<h1>I am {{ bobs }}!</h1>
+<div id='splash_photo'>
+    <h1>Welcome to Djangogram!</h1>
+    <img class="day_pic" src="{% if random_photo %}{{ random_photo.photo.url }}{% else %}{% static 'random_def.jpg' %}{% endif %}">
+    <h4>{{ title }}</h4>
+    <h5>Posted: {{ date }}</h5>
+    <h5>Description: </h5>
+    <p>{{ description }}</p>
+    <h5>Uploaded by: <a href="{% if random_photo %}{% url 'public_profile' request_username=random_user%}{% else %}{% url 'home' %}{% endif %}">{% if random_user %}{{ random_user }}{% else %}Site{% endif %}</a></h5>
+</div>
 {% endblock %}

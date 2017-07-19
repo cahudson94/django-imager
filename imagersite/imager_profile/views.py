@@ -2,25 +2,41 @@
 from django.shortcuts import render
 from imager_profile.models import ImagerProfile
 from imager_images.models import ImagerPhoto, ImagerAlbum
-# from django.http import HttpResponse
-# from django.template import loader
+from django.contrib.auth.models import User
+from random import randint
+import datetime
 
 
 def home_view(request):
     """Home view for imager."""
-    context = {'bobs': 'groot'}
+    current_user = request.user
+    photos = ImagerPhoto.objects.all().filter(published='PB')
+    if photos:
+        random_index = randint(1, len(photos)) - 1
+        random_photo = photos[random_index]
+        title = random_photo.title
+        description = random_photo.description
+        date_uploaded = random_photo.date_uploaded
+        user = random_photo.user.username
+    else:
+        random_photo = None
+        title = 'Default'
+        description = 'There are no uploaded pictures.'
+        date_uploaded = datetime.datetime.now()
+        user = ''
+    context = {'user': current_user,
+               'random_photo': random_photo,
+               'title': title,
+               'description': description,
+               'date': date_uploaded,
+               'random_user': user}
     return render(request, 'imagersite/home.html', context=context)
-
-
-def account_view(request):
-    """Registration view for imager."""
-    return render(request, 'imagersite/accounts.html')
 
 
 def profile_view(request):
     """The view for our profile page."""
     current_user = request.user
-    user = ImagerProfile.objects.filter(user=current_user).first()
+    user = ImagerProfile.objects.get(user=current_user)
     pub_pics = (ImagerPhoto.objects
                 .filter(user=current_user)
                 .filter(published='PB')).count()
@@ -48,19 +64,32 @@ def profile_view(request):
     return render(request, 'imagersite/profile.html', context=userdata)
 
 
-def library_view(request):
-    """The view for the user galleries."""
-    photos = ImagerPhoto.objects.all()
-    albums = ImagerAlbum.objects.all()
-    return render(request, 'imagersite/library.html',
-                  {'photos': photos,
-                   'albums': albums})
-
-
-def photo_view(request):
-    """The view for individual photos."""
-    photo = ImagerPhoto.objects.query()
-
-
-def album_view(request):
-    """The view for individual photos."""
+def user_profile_view(request, request_username=None):
+    """The view for another users profile."""
+    user = request.user
+    request_username = request_username.lower()
+    request_user = User.objects.get(username=request_username)
+    profile = ImagerProfile.objects.get(user=request_user)
+    pub_pics = (ImagerPhoto.objects
+                .filter(user=request_user)
+                .filter(published='PB')).count()
+    pub_albums = (ImagerAlbum.objects
+                  .filter(user=request_user)
+                  .filter(published='PB')).count()
+    return render(
+        request,
+        'imagersite/other_profile.html',
+        context={
+            'user': user,
+            'requested_user': request_username,
+            'username': profile.user,
+            'location': (profile.city + ', ' + profile.state),
+            'pic': profile.pic,
+            'job': profile.job,
+            'camera': profile.camera_type,
+            'photostyle': profile.photography_style,
+            'website': profile.website,
+            'pub_pics': pub_pics,
+            'pub_albums': pub_albums,
+        }
+    )
