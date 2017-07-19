@@ -63,8 +63,8 @@ class ProfileTestCase(TestCase):
         user = ImagerProfile.objects.first()
         user.job = 'Dinosaur wrangler'
         user.website = 'raptorrider.com'
-        user.camera_type = 'Canon'
-        user.photography_style = 'Landscape'
+        user.camera_type = 'CN'
+        user.photography_style = 'LS'
         user.save()
         self.assertTrue(ImagerProfile.objects.first().job, 'Dinosaur wrangler')
         self.assertTrue(ImagerProfile.objects.first().website, 'raptorrider.com')
