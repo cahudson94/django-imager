@@ -55,7 +55,7 @@ class ProfileModelTestCase(TestCase):
     def test_profile_has_correct_attrs(self):
         """Test that correct attributes are on profile."""
         self.assertTrue(
-            ImagerProfile.objects.first().photography_style, 'Color')
+            ImagerProfile.objects.first().photo_style, 'Color')
         self.assertTrue(ImagerProfile.objects.first().active, False)
 
 
@@ -146,3 +146,40 @@ class ProfileTestCase(TestCase):
                                    kwargs={'request_username': 'deckardcain'}))
         self.assertFalse(b'Private' in response.content)
         self.assertTrue(b'Public' in response.content)
+
+    def test_edit_profile_form_contents(self):
+        """Test the the edit form has the appropriate fields."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('profile_edit'))
+        self.assertTrue(b'deck@rd.cain' in response.content)
+        self.assertTrue(b'deckardcain' in response.content)
+        self.assertTrue(b'first_name' in response.content)
+
+    def test_edit_redirects_to_profile(self):
+        """Test that on submit of form redirects to profile page."""
+        self.client.force_login(self.user)
+        data = {
+            'username': 'deckardcain',
+            'email': 'deck@rd.cain',
+        }
+        response = self.client.post(reverse_lazy('profile_edit'),
+                                    data, follow=False)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response.url == reverse_lazy('profile'))
+
+    def test_edit_updates_profile_and_user(self):
+        """Test that a submited form updates the changed fields."""
+        self.client.force_login(self.user)
+        self.assertTrue(self.user.imagerprofile.get_photo_style_display() == 'Color')
+        data = {
+            'username': 'deckardcain',
+            'email': 'deck@rd.cain',
+            'first_name': 'deckard',
+            'last_name': 'cain',
+            'photo_style': 'LS'
+        }
+        response = self.client.post(reverse_lazy('profile_edit'),
+                                    data, follow=True)
+        user = User.objects.get(username=self.user.username)
+        self.assertTrue(b'Landscape' in response.content)
+        self.assertTrue(user.first_name == data['first_name'])

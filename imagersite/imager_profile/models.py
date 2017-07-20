@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils.encoding import python_2_unicode_compatible
-from imager_images.models import ImagerPhoto, ImagerAlbum
+from imager_images.models import ImagerPhoto
 
 CAMERA_CHOICES = [
     ('CN', 'Canon'),
@@ -44,8 +44,8 @@ class ImagerProfile(models.Model):
         max_length=2,
         choices=CAMERA_CHOICES,
     )
-    photography_style = models.CharField(
-        max_length=5,
+    photo_style = models.CharField(
+        max_length=2,
         choices=PHOTO_CHOICES,
         default='CR'
     )

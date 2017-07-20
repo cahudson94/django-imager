@@ -8,5 +8,6 @@
     <img class="photo" src="{{photo.photo.url}}">
     <h1>{{ photo.title }}</h1>
     <p> {{ photo.description }} </p>
+    <a href="{% url 'edit_photo' pk=photo.id %}" id="edit" class="button"><h5>Edit</h5></a>
 </div>
 {% endblock %}
