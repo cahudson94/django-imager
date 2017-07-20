@@ -1,4 +1,4 @@
-"""."""
+"""URL managment for profile based pages."""
 from django.conf.urls import url
 from imager_profile.views import (
     ProfileView,
