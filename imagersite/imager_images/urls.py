@@ -1,4 +1,4 @@
-"""."""
+"""URL file for image based pages."""
 from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 from imager_images.views import (LibraryView,

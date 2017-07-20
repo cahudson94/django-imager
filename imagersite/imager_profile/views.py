@@ -1,4 +1,4 @@
-"""View file for django imagerproject."""
+"""View file for django imagersite and imager_profile."""
 from imager_profile.models import ImagerProfile
 from imager_images.models import ImagerPhoto, ImagerAlbum
 from django.views.generic import TemplateView, ListView, UpdateView
@@ -7,16 +7,17 @@ from random import randint
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from imager_profile.forms import ProfileForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 import datetime
 
 
 class HomeView(TemplateView):
-    """."""
+    """View for home page."""
 
     template_name = "imagersite/home.html"
 
     def get_context_data(self, **kwargs):
-        """."""
+        """Setup context for home page."""
         photos = ImagerPhoto.objects.all()
         context = super(HomeView, self).get_context_data(**kwargs)
         if photos:
@@ -41,14 +42,14 @@ class HomeView(TemplateView):
         return context
 
 
-class ProfileView(ListView):
-    """."""
+class ProfileView(LoginRequiredMixin, ListView):
+    """Privet profile page."""
 
     template_name = "imager_profile/profile.html"
     model = ImagerProfile
 
     def get_context_data(self, **kwargs):
-        """."""
+        """Setup context for page."""
         context = super(ProfileView, self).get_context_data(**kwargs)
         current_user = context['view'].request.user
         user = ImagerProfile.objects.get(user=current_user)
@@ -79,22 +80,22 @@ class ProfileView(ListView):
 
 
 class PublicProfileView(ListView):
-    """."""
+    """Public [rofile page."""
 
     template_name = "imager_profile/other_profile.html"
     model = ImagerProfile
 
     def get_context_data(self, **kwargs):
-        """."""
+        """Setup context for page."""
         context = super(PublicProfileView, self).get_context_data(**kwargs)
         current_user = context['view'].request.user
         request_user = User.objects.filter(username=self.kwargs['request_username'])
         profile = ImagerProfile.objects.get(user=request_user)
         pub_pics = (ImagerPhoto.objects
-                    .filter(user=current_user)
+                    .filter(user=request_user)
                     .filter(published='PB')).count()
         pub_albums = (ImagerAlbum.objects
-                      .filter(user=current_user)
+                      .filter(user=request_user)
                       .filter(published='PB')).count()
         context['user'] = current_user
         context['username'] = profile.user
@@ -110,7 +111,7 @@ class PublicProfileView(ListView):
         return context
 
 
-class ProfileEditView(UpdateView):
+class ProfileEditView(LoginRequiredMixin, UpdateView):
     """View for editing the users profile."""
 
     model = User
