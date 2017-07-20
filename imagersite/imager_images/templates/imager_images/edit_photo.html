@@ -1,0 +1,15 @@
+{% extends 'imagersite/base.html' %}
+{% load thumbnail %}
+{% block title %}Edit Photo{% endblock %}
+{% block body %}
+<div class="wrap">
+    <form class="forms" enctype="multipart/form-data" action="" method="post"> {% csrf_token %}
+        {{ form.as_p }}
+        <input class="button" type="submit" value="Confirm"/>
+    </form>
+    {% thumbnail form.instance.photo "150x150" crop="center" as im %}
+        <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+        <h5>Current Image</h5>
+    {% endthumbnail %}
+</div>
+{% endblock %}

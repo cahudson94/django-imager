@@ -1,4 +1,4 @@
-{% extends 'imagersite/base.html' %}
+ {% extends 'imagersite/base.html' %}
 {% load static %}
 {% block title %}Profile{% endblock %}
 
@@ -17,6 +17,7 @@
       <li>Camera Type: {{ camera }}</li>
       <li>Photography Style: {{ photostyle }}</li>
       <li>Website: {{ website }}</li>
+      <a href="{% url 'profile_edit' %}" class="button" id="edit"><h5>Edit</h5></a>
   </div>
   <div class="column">
     <section>

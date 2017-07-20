@@ -19,5 +19,6 @@
                 <h1>You have no photos in this Album!</h1>
             {% endif %}
         </ul>
+        <a href="{% url 'edit_album' pk=album.id %}" id="edit" class="button"><h5>Edit</h5></a>
     </div>
 {% endblock %}

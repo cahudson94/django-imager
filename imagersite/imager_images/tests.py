@@ -66,7 +66,7 @@ class AlbumFactory(factory.django.DjangoModelFactory):
         lambda a: '{} is confirmed an album'.format(a.title))
 
 
-class PhotoTestCase(TestCase):
+class PhotoModelTestCase(TestCase):
     """Photo tests for view and model."""
 
     def setUp(self):
@@ -103,7 +103,7 @@ class PhotoTestCase(TestCase):
         self.tearDown()
 
 
-class AlbumTestCase(TestCase):
+class AlbumModelTestCase(TestCase):
     """Album tests for model and view."""
 
     def setUp(self):
@@ -267,7 +267,8 @@ class LibraryTestCase(TestCase):
             'description': 'The best descrip...',
             'published': 'PV',
         }
-        response = self.client.post(reverse_lazy('add_photo'), data, follow=False)
+        response = self.client.post(reverse_lazy('add_photo'),
+                                    data, follow=False)
         self.assertTrue(response.status_code == 302)
         self.assertTrue(response.url == reverse_lazy('library'))
 
@@ -281,7 +282,8 @@ class LibraryTestCase(TestCase):
             'description': '...tion you have ever seen!',
             'published': 'PV',
         }
-        response = self.client.post(reverse_lazy('add_album'), data, follow=False)
+        response = self.client.post(reverse_lazy('add_album'),
+                                    data, follow=False)
         self.assertTrue(response.status_code == 302)
         self.assertTrue(response.url == reverse_lazy('library'))
 
@@ -304,7 +306,7 @@ class LibraryTestCase(TestCase):
         }
         response = self.client.post(reverse_lazy('add_photo'), data)
         self.assertTrue(response.status_code == 200)
-        self.assertTrue('imager_images/imagerphoto_form.html' in response.template_name)
+        self.assertTrue('imager_images/add_photo.html' in response.template_name)
 
     def test_bad_add_album_stays(self):
         """Test no redirect when form submit incomplete."""
@@ -316,7 +318,90 @@ class LibraryTestCase(TestCase):
         }
         response = self.client.post(reverse_lazy('add_album'), data)
         self.assertTrue(response.status_code == 200)
-        self.assertTrue('imager_images/imageralbum_form.html' in response.template_name)
+        self.assertTrue('imager_images/add_album.html' in response.template_name)
+
+    def test_edit_photo_gets_photo_and_info(self):
+        """Test that the form gets the image and fields."""
+        self.client.force_login(self.user)
+        pic = ImagerPhoto.objects.first()
+        response = self.client.get(reverse_lazy('edit_photo',
+                                                kwargs={'pk': pic.id}))
+        self.assertTrue(pic.title in response.content.decode())
+        self.assertTrue(pic.description in response.content.decode())
+        self.assertTrue(b'Current Image' in response.content)
+
+    def test_edit_photo_redirects(self):
+        """Test that on form submission photo edit redirects."""
+        self.client.force_login(self.user)
+        pic = ImagerPhoto.objects.first()
+        data = {
+            'title': 'New stuff',
+            'description': 'Things go here!',
+            'published': 'PB',
+            'photo': pic.photo
+        }
+        response = self.client.post(reverse_lazy('edit_photo',
+                                                 kwargs={'pk': pic.id}),
+                                    data, follow=False)
+        self.assertTrue(response.status_code == 302)
+        self.assertTrue(response.url == reverse_lazy('library'))
+
+    def test_edit_photo_updates_photo_on_submit(self):
+        """Test that on post photo instance info is updated."""
+        self.client.force_login(self.user)
+        pic_before = ImagerPhoto.objects.first()
+        data = {
+            'title': 'Newer stuff',
+            'description': 'Other things go here!',
+            'published': 'PV',
+            'photo': pic_before.photo
+        }
+        response = self.client.post(reverse_lazy('edit_photo',
+                                                 kwargs={'pk': pic_before.id}),
+                                    data, follow=True)
+        pic_after = ImagerPhoto.objects.get(id=pic_before.id)
+        self.assertFalse(pic_before.title in response.content.decode())
+        self.assertTrue(pic_after.title == data['title'])
+
+    def test_edit_album_gets_album_and_info(self):
+        """Test that the form gets the album and fields."""
+        self.client.force_login(self.user)
+        alb = ImagerAlbum.objects.first()
+        response = self.client.get(reverse_lazy('edit_album',
+                                                kwargs={'pk': alb.id}))
+        self.assertTrue(alb.title in response.content.decode())
+        self.assertTrue(alb.description in response.content.decode())
+
+    def test_edit_album_redirects(self):
+        """Test that on form submission album edit redirects."""
+        self.client.force_login(self.user)
+        alb = ImagerAlbum.objects.first()
+        data = {
+            'title': 'Newer stuff',
+            'description': 'Other things go here!',
+            'published': 'PV',
+        }
+        response = self.client.post(reverse_lazy('edit_album',
+                                                 kwargs={'pk': alb.id}),
+                                    data, follow=False)
+        self.assertTrue(response.status_code == 302)
+        self.assertTrue(response.url == reverse_lazy('library'))
+
+    def test_edit_album_update_album_on_submit(self):
+        """Test that on post album instance info is updated."""
+        self.client.force_login(self.user)
+        alb_before = ImagerAlbum.objects.first()
+        data = {
+            'title': 'Newest stuff',
+            'description': 'Other other things go here!',
+            'published': 'PB',
+        }
+        response = self.client.post(reverse_lazy('edit_album',
+                                                 kwargs={'pk': alb_before.id}),
+                                    data, follow=True)
+        alb_after = ImagerAlbum.objects.get(id=alb_before.id)
+        self.assertFalse(alb_before.title in response.content.decode())
+        self.assertTrue(alb_after.title == data['title'])
 
     def test_individual_album_page_contents(self):
         """Test that the single album page has content."""
@@ -325,5 +410,5 @@ class LibraryTestCase(TestCase):
         response = self.client.get(reverse_lazy('album',
                                                 kwargs={'pk': alb_id}))
         html = BeautifulSoup(response.content, 'html.parser')
-        self.assertEqual(21, len(html.findAll('h5')))
+        self.assertEqual(22, len(html.findAll('h5')))
         self.tearDown()

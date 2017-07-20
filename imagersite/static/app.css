@@ -62,6 +62,7 @@ NAV
 /* ***************************************************************************
 MAIN SECTION
 *************************************************************************** */
+
 .main {
     margin-top: 0;
 }
@@ -101,6 +102,7 @@ MAIN SECTION
 .prof-pic {
     max-height: 70%;
     max-width: 50%;
+    padding-bottom: 10px;
 }
 
 #splash_photo {
@@ -168,47 +170,26 @@ MAIN SECTION
     max-width: 150px;
 }
 
-/* ***************************************************************************
-FOOTER
-*************************************************************************** */
-
-footer {
-    color: #CECECE;
-    height: 140px;
-    width: 100%;
-    background-color: #333;
-    padding-bottom: 50px;
+#id_photo {
+    max-width: 120px;
 }
 
-footer a {
-    display: block;
-    margin-bottom: 3px;
+#edit {
+    float: unset;
+    padding: .2rem 0;
+    width: 15%;
 }
 
-footer h5 {
-    margin-top: -40px;
-}
-
-
-footer hr {
-    margin-bottom: 10px;
-}
-
-footer .column {
-    margin-top: -10px;
+#edit h5 {
+    font-size: 1.3rem;
+    margin-bottom: 0;
 }
 
 .column {
     text-align: center;
-    font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
 }
 
-
-.column a {
-    text-align: center;
-    padding-top: 7px;
-}
-
-.column h5 {
-    font-family: Palatino,Palatino Linotype,Palatino LT STD,Book Antiqua,Georgia,serif;
+.column li {
+    padding-bottom: 8px;
+    list-style: none;
 }

@@ -1,0 +1,64 @@
+{% extends 'imagersite/base.html' %}
+{% load static %}
+{% block title %}Edit Profile{% endblock %}
+{% block body %}
+<div class="wrap">
+    <form class="forms" enctype="multipart/form-data" action="" method="post"> {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <label for="username">Username:</label>
+            <input type="text" name="username" value="{{ user.username }}">
+        </p>
+        <p>
+            <label for="email">Email: </label>
+            <input type="text" name="email" value="{{ user.email }}">
+        </p>
+        <p>
+            <label for="first_name">First name: </label>
+            <input type="text" name="first_name" value="{{ user.first_name }}">
+        </p>
+        <p>
+            <label for="last_name">Last name: </label>
+            <input type="text" name="last_name" value="{{ user.last_name }}">
+        </p>
+        <p>
+            <label for="city">City: </label>
+            <input type="text" name="city" value="{{ user.imagerprofile.city }}">
+        </p>
+        <p>
+            <label for="state">State: </label>
+            <input type="text" name="state" value="{{ user.imagerprofile.state }}">
+        </p>
+        <p>
+            <label for="camera_type">Camera type: </label>
+            <select type="text" name="camera_type" value="{{ user.imagerprofile.camera_type }}">
+                <option value="CN">Canon</option>
+                <option value="NK">Nikon</option>
+                <option value="KD">Kodak</option>
+                <option value="SN">Sony</option>
+                <option value="IP">iPhone</option>
+            </select>
+        </p>
+        <p>
+            <label for="photo_style">Photography style: </label>
+            <select type="text" name="photo_style" value="{{ user.imagerprofile.photo_style }}">
+                <option value="CR">Color</option>
+                <option value="BW">Black and White</option>
+                <option value="LS">Landscape</option>
+                <option value="PR">Portrait</option>
+                <option value="MI">Micro</option>
+                <option value="MA">Macro</option>
+            </select>
+        </p>
+        <p>
+            <label for="job">Job: </label>
+            <input type="text" name="job" value="{{ user.imagerprofile.job }}">
+        </p>
+        <p>
+            <label for="website">Website: </label>
+            <input type="url" name="website" value="{{ user.imagerprofile.website }}">
+        </p>
+        <input class="button" type="submit" value="Confirm"/>
+    </form>
+</div>
+{% endblock %}
