@@ -1,11 +1,9 @@
 """View file for all image related pages."""
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import (
-    TemplateView,
-    DetailView,
-    CreateView,
-    UpdateView
-)
+from django.views.generic.base import TemplateView
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+from django.views.generic.edit import UpdateView, CreateView
 from imager_images.models import ImagerPhoto, ImagerAlbum
 from imager_images.forms import PhotoForm, AlbumForm
 from django.urls import reverse_lazy
@@ -22,6 +20,8 @@ class LibraryView(LoginRequiredMixin, TemplateView):
         user = context['view'].request.user
         context['photos'] = ImagerPhoto.objects.filter(user=user)
         context['albums'] = ImagerAlbum.objects.filter(user=user)
+        context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
+        context['album_tags'] = set([tag for album in context['albums'] for tag in album.tags.names()])
         return context
 
 
@@ -35,6 +35,11 @@ class SinglePhotoView(LoginRequiredMixin, DetailView):
         """Provide context for the view."""
         context = super(SinglePhotoView, self).get_context_data(**kwargs)
         context['photo'] = context['imagerphoto']
+        user = context['view'].request.user
+        tags = set(context['photo'].tags.names())
+        shared_tags = (ImagerPhoto.objects.filter(user=user)
+                                          .filter(tags__name__in=tags).distinct())
+        context['shared_tags'] = [photo for photo in shared_tags[:5]]
         return context
 
 
@@ -49,6 +54,8 @@ class SingleAlbumView(LoginRequiredMixin, DetailView):
         context = super(SingleAlbumView, self).get_context_data(**kwargs)
         context['album'] = context['imageralbum']
         context['photos'] = context['imageralbum'].photos.all()
+        context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
+        context['album_tags'] = set([tag for tag in context['album'].tags.names()])
         return context
 
 
@@ -122,3 +129,41 @@ class AlbumEdit(LoginRequiredMixin, UpdateView):
         """Tie form data to user."""
         form.instance.user = self.request.user
         return super(UpdateView, self).form_valid(form)
+
+
+class AlbumTagListView(ListView):
+    """The list of albums with a given tag."""
+
+    template_name = 'imager_images/tagged_albums.html'
+
+    def get_queryset(self):
+        """Filter for the tag."""
+        return(ImagerAlbum.objects.filter(user=self.request.user)
+                                  .filter(tags__name__in=self.kwargs.get('slug')))
+
+    def get_context_data(self, **kwargs):
+        """Return the requested albums."""
+        context = super(AlbumTagListView, self).get_context_data(**kwargs)
+        context['tag'] = self.kwargs.get('slug')
+        context['albums'] = (ImagerAlbum.objects.filter(user=self.request.user)
+                                                .filter(tags__name__in=[self.kwargs.get('slug')]).all())
+        return context
+
+
+class PhotoTagListView(ListView):
+    """The list of photos with a given tag."""
+
+    template_name = 'imager_images/tagged_photos.html'
+
+    def get_queryset(self):
+        """Filter for the tag."""
+        return(ImagerPhoto.objects.filter(user=self.request.user)
+                                  .filter(tags__slug=[self.kwargs.get('slug')]).all())
+
+    def get_context_data(self, **kwargs):
+        """Return the requested photos."""
+        context = super(PhotoTagListView, self).get_context_data(**kwargs)
+        context['tag'] = self.kwargs.get('slug')
+        context['photos'] = (ImagerPhoto.objects.filter(user=self.request.user)
+                                                .filter(tags__name__in=[self.kwargs.get('slug')]).all())
+        return context

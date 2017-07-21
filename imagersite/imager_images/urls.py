@@ -8,6 +8,8 @@ from imager_images.views import (LibraryView,
                                  AlbumCreate,
                                  PhotoEdit,
                                  AlbumEdit,
+                                 PhotoTagListView,
+                                 AlbumTagListView
                                  )
 
 
@@ -18,6 +20,10 @@ urlpatterns = [
         name='photo'),
     url(r'^albums/(?P<pk>\d+)/$', login_required(SingleAlbumView.as_view()),
         name='album'),
+    url(r'^photos/tags/(?P<slug>\w*\d*)/$', login_required(PhotoTagListView.as_view()),
+        name='tagged_photos'),
+    url(r'^albums/tags/(?P<slug>\w*\d*)/$', login_required(AlbumTagListView.as_view()),
+        name='tagged_albums'),
     url(r'^photo/add/$', login_required(PhotoCreate.as_view()),
         name='add_photo'),
     url(r'^album/add/$', login_required(AlbumCreate.as_view()),

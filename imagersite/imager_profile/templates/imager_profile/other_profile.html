@@ -8,16 +8,16 @@
   <h1>Welcome {{ username }}!</h1>
   <div class="column">
       <img class="prof-pic" src="
-      {% if pic %}
-          {{ pic.url }}
+      {% if profile.pic %}
+          {{ profile.pic.url }}
       {% else %}
           {% static 'default_pic.jpg' %}
       {% endif %}"></img>
       <li>Location: {{ location }}</li>
-      <li>Job: {{ job }}</li>
+      <li>Job: {{ profile.job }}</li>
       <li>Camera Type: {{ camera }}</li>
       <li>Photography Style: {{ photostyle }}</li>
-      <li>Website: {{ website }}</li>
+      <li>Website: {{ profile.website }}</li>
   </div>
   <div class="column">
     <section>

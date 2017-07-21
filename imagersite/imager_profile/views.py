@@ -1,7 +1,9 @@
 """View file for django imagersite and imager_profile."""
 from imager_profile.models import ImagerProfile
 from imager_images.models import ImagerPhoto, ImagerAlbum
-from django.views.generic import TemplateView, ListView, UpdateView
+from django.views.generic.base import TemplateView
+from django.views.generic.list import ListView
+from django.views.generic.edit import UpdateView
 from django.contrib.auth.models import User
 from random import randint
 from django.urls import reverse_lazy
@@ -51,31 +53,22 @@ class ProfileView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         """Setup context for page."""
         context = super(ProfileView, self).get_context_data(**kwargs)
-        current_user = context['view'].request.user
-        user = ImagerProfile.objects.get(user=current_user)
-        pub_pics = (ImagerPhoto.objects
-                    .filter(user=current_user)
-                    .filter(published='PB')).count()
-        pub_albums = (ImagerAlbum.objects
-                      .filter(user=current_user)
-                      .filter(published='PB')).count()
-        prv_pics = (ImagerPhoto.objects
-                    .filter(user=current_user)
-                    .filter(published='PV')).count()
-        prv_albums = (ImagerAlbum.objects
-                      .filter(user=current_user)
-                      .filter(published='PV')).count()
-        context['username'] = user.user
-        context['location'] = (user.city + ', ' + user.state)
-        context['pic'] = user.pic
-        context['job'] = user.job
-        context['camera'] = user.get_camera_type_display()
-        context['photostyle'] = user.get_photo_style_display()
-        context['website'] = user.website
-        context['pub_pics'] = pub_pics
-        context['pub_albums'] = pub_albums
-        context['prv_pics'] = prv_pics
-        context['prv_albums'] = prv_albums
+        context['pub_pics'] = (ImagerPhoto.objects
+                               .filter(user=self.request.user)
+                               .filter(published='PB')).count()
+        context['pub_albums'] = (ImagerAlbum.objects
+                                 .filter(user=self.request.user)
+                                 .filter(published='PB')).count()
+        context['prv_pics'] = (ImagerPhoto.objects
+                               .filter(user=self.request.user)
+                               .filter(published='PV')).count()
+        context['prv_albums'] = (ImagerAlbum.objects
+                                 .filter(user=self.request.user)
+                                 .filter(published='PV')).count()
+        context['profile'] = context['view'].request.user.imagerprofile
+        context['camera'] = context['profile'].get_camera_type_display()
+        context['photostyle'] = context['profile'].get_photo_style_display()
+        context['location'] = (context['profile'].city + ', ' + context['profile'].state)
         return context
 
 
@@ -88,26 +81,18 @@ class PublicProfileView(ListView):
     def get_context_data(self, **kwargs):
         """Setup context for page."""
         context = super(PublicProfileView, self).get_context_data(**kwargs)
-        current_user = context['view'].request.user
-        request_user = User.objects.filter(username=self.kwargs['request_username'])
-        profile = ImagerProfile.objects.get(user=request_user)
-        pub_pics = (ImagerPhoto.objects
-                    .filter(user=request_user)
-                    .filter(published='PB')).count()
-        pub_albums = (ImagerAlbum.objects
-                      .filter(user=request_user)
-                      .filter(published='PB')).count()
-        context['user'] = current_user
-        context['username'] = profile.user
+        request_user = User.objects.get(username=self.kwargs['request_username'])
+        context['pub_pics'] = (ImagerPhoto.objects
+                               .filter(user=request_user)
+                               .filter(published='PB')).count()
+        context['pub_albums'] = (ImagerAlbum.objects
+                                 .filter(user=request_user)
+                                 .filter(published='PB')).count()
         context['request_user'] = request_user
-        context['location'] = (profile.city + ', ' + profile.state)
-        context['pic'] = profile.pic
-        context['job'] = profile.job
-        context['camera'] = profile.camera_type
-        context['photostyle'] = profile.photo_style
-        context['website'] = profile.website
-        context['pub_pics'] = pub_pics
-        context['pub_albums'] = pub_albums
+        context['profile'] = request_user.imagerprofile
+        context['camera'] = context['profile'].get_camera_type_display()
+        context['photostyle'] = context['profile'].get_photo_style_display()
+        context['location'] = (context['profile'].city + ', ' + context['profile'].state)
         return context
 
 

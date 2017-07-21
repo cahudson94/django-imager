@@ -403,6 +403,131 @@ class LibraryTestCase(TestCase):
         self.assertFalse(alb_before.title in response.content.decode())
         self.assertTrue(alb_after.title == data['title'])
 
+    def test_photo_tag_is_added_on_library_view_page(self):
+        """Test new photo tags show up on library page when added."""
+        self.client.force_login(self.user)
+        pic = ImagerPhoto.objects.first()
+        data = {
+            'title': 'New stuff',
+            'description': 'Things go here!',
+            'published': 'PB',
+            'photo': pic.photo,
+            'tags': 'Best'
+        }
+        response = self.client.post(reverse_lazy('edit_photo',
+                                                 kwargs={'pk': pic.id}),
+                                    data, follow=True)
+        self.assertTrue(b'Best' in response.content)
+
+    def test_album_tag_is_added_on_library_view_page(self):
+        """Test new album tags show up on library page when added."""
+        self.client.force_login(self.user)
+        alb = ImagerAlbum.objects.first()
+        data = {
+            'title': 'Newer stuff',
+            'description': 'Other things go here!',
+            'published': 'PV',
+            'tags': "Better, Stuff"
+        }
+        response = self.client.post(reverse_lazy('edit_album',
+                                                 kwargs={'pk': alb.id}),
+                                    data, follow=True)
+        self.assertTrue(b'Better' in response.content)
+        self.assertTrue(b'Stuff' in response.content)
+
+    def test_photo_tag_is_added(self):
+        """Test a new tag is added to the library veiw for photos."""
+        self.client.force_login(self.user)
+        pic = ImagerPhoto.objects.first()
+        data = {
+            'title': 'New stuff',
+            'description': 'Things go here!',
+            'published': 'PB',
+            'photo': pic.photo,
+            'tags': 'Best'
+        }
+        response = self.client.post(reverse_lazy('edit_photo',
+                                                 kwargs={'pk': pic.id}),
+                                    data, follow=True)
+        self.assertTrue(b'Best' in response.content)
+        self.assertFalse(b'Bester' in response.content)
+        pic = ImagerPhoto.objects.last()
+        data = {
+            'title': 'Newer stuff',
+            'description': 'Stuff goes here!',
+            'published': 'PB',
+            'photo': pic.photo,
+            'tags': 'Bester'
+        }
+        response = self.client.post(reverse_lazy('edit_photo',
+                                                 kwargs={'pk': pic.id}),
+                                    data, follow=True)
+        self.assertTrue(b'Best' in response.content)
+        self.assertTrue(b'Bester' in response.content)
+
+    def test_album_tag_is_added(self):
+        """Test a new tag is added to the library view for albums."""
+        self.client.force_login(self.user)
+        alb = ImagerAlbum.objects.first()
+        data = {
+            'title': 'Newer stuff',
+            'description': 'Other things go here!',
+            'published': 'PV',
+            'tags': "Stuff"
+        }
+        response = self.client.post(reverse_lazy('edit_album',
+                                                 kwargs={'pk': alb.id}),
+                                    data, follow=True)
+        self.assertTrue(b'Stuff' in response.content)
+        self.assertFalse(b'N3RD' in response.content)
+        alb = ImagerAlbum.objects.first()
+        data = {
+            'title': 'This one changes too.',
+            'description': 'Other things go here!',
+            'published': 'PV',
+            'tags': "Stuff, N3RD"
+        }
+        response = self.client.post(reverse_lazy('edit_album',
+                                                 kwargs={'pk': alb.id}),
+                                    data, follow=True)
+        self.assertTrue(b'N3RD' in response.content)
+        self.assertTrue(b'Stuff' in response.content)
+
+    def test_tag_view_displays_photos(self):
+        """Test photos with a tag show on that tag page."""
+        self.client.force_login(self.user)
+        pic = ImagerPhoto.objects.first()
+        data = {
+            'title': 'New stuff',
+            'description': 'Things go here!',
+            'published': 'PB',
+            'photo': pic.photo,
+            'tags': 'Best'
+        }
+        self.client.post(reverse_lazy('edit_photo', kwargs={'pk': pic.id}),
+                         data)
+        pic_after = ImagerPhoto.objects.get(pk=pic.id)
+        response = self.client.get(reverse_lazy('tagged_photos',
+                                                kwargs={'slug': 'Best'}))
+        self.assertTrue(pic_after.title in response.content.decode())
+
+    def test_tag_view_displays_albums(self):
+        """Test albums with a tag show on that tag page."""
+        self.client.force_login(self.user)
+        alb = ImagerAlbum.objects.first()
+        data = {
+            'title': 'Newer stuff',
+            'description': 'Other things go here!',
+            'published': 'PV',
+            'tags': "Better, Stuff"
+        }
+        self.client.post(reverse_lazy('edit_album', kwargs={'pk': alb.id}),
+                         data)
+        alb_after = ImagerAlbum.objects.get(pk=alb.id)
+        response = self.client.get(reverse_lazy('tagged_albums',
+                                                kwargs={'slug': 'Better'}))
+        self.assertTrue(alb_after.title in response.content.decode())
+
     def test_individual_album_page_contents(self):
         """Test that the single album page has content."""
         self.login_helper('deckardcain', 'secret')
