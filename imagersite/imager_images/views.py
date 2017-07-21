@@ -7,6 +7,8 @@ from django.views.generic.edit import UpdateView, CreateView
 from imager_images.models import ImagerPhoto, ImagerAlbum
 from imager_images.forms import PhotoForm, AlbumForm
 from django.urls import reverse_lazy
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import random
 
 
 class LibraryView(LoginRequiredMixin, TemplateView):
@@ -39,7 +41,9 @@ class SinglePhotoView(LoginRequiredMixin, DetailView):
         tags = set(context['photo'].tags.names())
         shared_tags = (ImagerPhoto.objects.filter(user=user)
                                           .filter(tags__name__in=tags).distinct())
-        context['shared_tags'] = [photo for photo in shared_tags[:5]]
+        num = 5 if len(shared_tags) >= 5 else len(shared_tags)
+        shared_sample = random.sample(list(shared_tags), num)
+        context['shared_tags'] = set(photo for photo in shared_sample)
         return context
 
 
@@ -52,8 +56,17 @@ class SingleAlbumView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         """Provide context for the view."""
         context = super(SingleAlbumView, self).get_context_data(**kwargs)
+        request = context['view'].request
         context['album'] = context['imageralbum']
-        context['photos'] = context['imageralbum'].photos.all()
+        photos = context['imageralbum'].photos.all()
+        paginator = Paginator(photos, 4)
+        page = request.GET.get('page')
+        try:
+            context['photos'] = paginator.page(page)
+        except PageNotAnInteger:
+            context['photos'] = paginator.page(1)
+        except EmptyPage:
+            context['photos'] = paginator.page(paginator.num_pages)
         context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
         context['album_tags'] = set([tag for tag in context['album'].tags.names()])
         return context
@@ -166,4 +179,22 @@ class PhotoTagListView(ListView):
         context['tag'] = self.kwargs.get('slug')
         context['photos'] = (ImagerPhoto.objects.filter(user=self.request.user)
                                                 .filter(tags__name__in=[self.kwargs.get('slug')]).all())
+        return context
+
+
+class PhotosetView(ListView):
+
+    def get_context_data(self, **kwargs):
+        """."""
+        context = super(PhotosetView, self).get_context_data(**kwargs)
+        request = context['view'].request
+        photo_list = Photo.objects.all()
+        paginator = Paginator(photo_list, 4)
+        page = request.GET.get('page')
+        try:
+            context['photos'] = paginator.page(page)
+        except PageNotAnInteger:
+            context['photos'] = paginator.page(1)
+        except EmptyPage:
+            context['photos'] = paginator.page(paginator.num_pages)
         return context

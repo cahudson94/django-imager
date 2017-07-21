@@ -224,3 +224,31 @@ MAIN SECTION
     display: inline-block;
     padding: 10px 15px;
 }
+
+.step-links li p {
+    padding: 0.1875rem 0.625rem;
+    margin-bottom: 0;
+}
+
+.step-links li {
+    padding-right: 0;
+}
+
+.page-button {
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    border: 1px solid transparent;
+    border-radius: 0;
+    transition: background-color 0.25s ease-out, color 0.25s ease-out;
+    text-align: center;
+    background-color: #1779ba;
+}
+
+.page-button p {
+    background-color: #cccccc;
+}
+
+ul {
+    margin-left: 0;
+}

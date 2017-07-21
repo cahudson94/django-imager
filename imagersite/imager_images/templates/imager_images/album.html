@@ -5,6 +5,27 @@
 <div class="album-page">
     <div class="photo-section">
         <h1>{{ album.title }}</h1>
+        <div class="pagination">
+            <ul class="step-links">
+                <li class="page-button">
+                {% if photos.has_previous %}
+                    <a href="?page={{ photos.previous_page_number }}">previous</a>
+                {% else %}
+                    <p>previous</p>
+                {% endif %}
+                </li>
+                <li class="current-page">
+                    Page {{ photos.number }} of {{ photos.paginator.num_pages }}
+                </li>
+                <li class="page-button">
+                {% if photos.has_next %}
+                    <a href="?page={{ photos.next_page_number }}">next</a>
+                {% else %}
+                    <p>next</p>
+                {% endif %}
+                </li>
+            </ul>
+        </div>
         <ul>
             {% if photos %}
                 {% for photo in photos %}
@@ -37,5 +58,26 @@
         {% endfor %}
         </ul>
         <a href="{% url 'edit_album' pk=album.id %}" id="edit" class="button"><h5>Edit</h5></a>
+    </div>
+    <div class="pagination">
+        <ul class="step-links">
+            <li class="page-button">
+            {% if photos.has_previous %}
+                <a href="?page={{ photos.previous_page_number }}">previous</a>
+            {% else %}
+                <p>previous</p>
+            {% endif %}
+            </li>
+            <li class="current-page">
+                Page {{ photos.number }} of {{ photos.paginator.num_pages }}
+            </li>
+            <li class="page-button">
+            {% if photos.has_next %}
+                <a href="?page={{ photos.next_page_number }}">next</a>
+            {% else %}
+                <p>next</p>
+            {% endif %}
+            </li>
+        </ul>
     </div>
 {% endblock %}
