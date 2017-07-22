@@ -4,8 +4,9 @@
 {% block title %}Library{% endblock %}
 {% block body %}
 <div class="library">
+    {% if albums %}
     <div class="album-section">
-        <h1>Your Albums</h1>
+        <h1 class="header">{% if photos %}<a href="{% url 'albums' %}">{% endif %}Your Albums</a></h1>
         <ul>
             {% for album in albums %}
             <li>
@@ -20,9 +21,10 @@
         </ul>
         <h2 class="profile-button"><a class="button" id="center" href="{% url 'add_album' %}">Add Album</a></h2>
     </div>
-
+    {% endif %}
+    {% if photos %}
     <div class="photo-section">
-        <h1>Your Photos</h1>
+        <h1 class="header">{% if albums %}<a href="{% url 'photos' %}">{% endif %}Your Photos</a></h1>
         <ul>
             {% for photo in photos %}
             <li>
@@ -35,5 +37,6 @@
         </ul>
         <h2 class="profile-button"><a class="button" id="center" href="{% url 'add_photo' %}">Add Photo</a></h2>
     </div>
+    {% endif %}
 </div>
 {% endblock %}

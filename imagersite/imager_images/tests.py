@@ -172,24 +172,66 @@ class LibraryTestCase(TestCase):
         os.system('rm -rf ' + images_del)
         os.system('rm -rf ' + media + '/cache/')
 
-    def login_helper(self, username, password):
-        """Log in using a post request."""
-        return self.client.post(reverse_lazy('login'),
-                                {'username': username,
-                                 'password': password},
-                                follow=True)
-
     def test_library_has_users_content(self):
         """Test that users albums and photos are present."""
-        self.login_helper('deckardcain', 'secret')
+        self.client.force_login(self.user)
         response = self.client.get(reverse_lazy('library'))
         html = BeautifulSoup(response.content, 'html.parser')
         self.assertEqual(22, len(html.findAll('h5')))
         self.assertTrue(html.find('img', {'src': '/static/black.png'}))
 
+    def test_library_status_ok(self):
+        """Test that the library view returns a 200 ok."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('library'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_photos_status_ok(self):
+        """Test that the photos view returns a 200 ok."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('photos'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_albums_status_ok(self):
+        """Test that the albums view returns a 200 ok."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('albums'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_photo_status_ok(self):
+        """Test that the single photo view returns a 200 ok."""
+        self.client.force_login(self.user)
+        pic_id = ImagerPhoto.objects.first().id
+        response = self.client.get(reverse_lazy('photo',
+                                                kwargs={'pk': pic_id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_album_status_ok(self):
+        """Test that the single album view returns a 200 ok."""
+        self.client.force_login(self.user)
+        alb_id = ImagerAlbum.objects.first().id
+        response = self.client.get(reverse_lazy('album',
+                                                kwargs={'pk': alb_id}))
+        self.assertEqual(response.status_code, 200)
+
+    def test_all_photos_page_contents(self):
+        """Test that all photos are present on this page."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('photos'))
+        html = BeautifulSoup(response.content, 'html.parser')
+        self.assertEqual(21, len(html.findAll('h5')))
+
+    def test_all_albums_page_contents(self):
+        """Test that all albums are present on this page."""
+        self.client.force_login(self.user)
+        response = self.client.get(reverse_lazy('albums'))
+        html = BeautifulSoup(response.content, 'html.parser')
+        self.assertEqual(1, len(html.findAll('h5')))
+        self.assertTrue(html.find('img', {'src': '/static/black.png'}))
+
     def test_individual_photo_page_contents(self):
         """Test that the single photo page has content."""
-        self.login_helper('deckardcain', 'secret')
+        self.client.force_login(self.user)
         pic_id = ImagerPhoto.objects.first().id
         response = self.client.get(reverse_lazy('photo',
                                                 kwargs={'pk': pic_id}))
@@ -197,7 +239,7 @@ class LibraryTestCase(TestCase):
 
     def test_bad_photo_request_page(self):
         """Test 404 on pk of photo that does not exist."""
-        self.login_helper('deckardcain', 'secret')
+        self.client.force_login(self.user)
         pic_id = ImagerPhoto.objects.last().id + 100
         response = self.client.get(reverse_lazy('photo',
                                                 kwargs={'pk': pic_id}))
@@ -205,7 +247,7 @@ class LibraryTestCase(TestCase):
 
     def test_bad_album_request_page(self):
         """Test 404 on pk of album that does not exist."""
-        self.login_helper('deckardcain', 'secret')
+        self.client.force_login(self.user)
         alb_id = ImagerAlbum.objects.last().id + 100
         response = self.client.get(reverse_lazy('album',
                                                 kwargs={'pk': alb_id}))
@@ -320,7 +362,7 @@ class LibraryTestCase(TestCase):
 
     def test_individual_album_page_contents(self):
         """Test that the single album page has content."""
-        self.login_helper('deckardcain', 'secret')
+        self.client.force_login(self.user)
         alb_id = ImagerAlbum.objects.first().id
         response = self.client.get(reverse_lazy('album',
                                                 kwargs={'pk': alb_id}))
