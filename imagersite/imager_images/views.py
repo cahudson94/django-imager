@@ -19,6 +19,32 @@ class LibraryView(TemplateView):
         return context
 
 
+class PhotosView(TemplateView):
+    """"List view for albums and photos."""
+
+    template_name = 'imagersite/library.html'
+
+    def get_context_data(self, **kwargs):
+        """Provide context for the view."""
+        context = super(PhotosView, self).get_context_data(**kwargs)
+        user = context['view'].request.user
+        context['photos'] = ImagerPhoto.objects.filter(user=user)
+        return context
+
+
+class AlbumsView(TemplateView):
+    """"List view for albums and photos."""
+
+    template_name = 'imagersite/library.html'
+
+    def get_context_data(self, **kwargs):
+        """Provide context for the view."""
+        context = super(AlbumsView, self).get_context_data(**kwargs)
+        user = context['view'].request.user
+        context['albums'] = ImagerAlbum.objects.filter(user=user)
+        return context
+
+
 class SinglePhotoView(DeleteView):
     """The view for individual photos."""
 

@@ -6,16 +6,21 @@ from imager_images.views import (LibraryView,
                                  SingleAlbumView,
                                  PhotoCreate,
                                  AlbumCreate,
+                                 PhotosView,
+                                 AlbumsView
                                  )
 
 
 urlpatterns = [
     url(r'^library/', LibraryView.as_view(), name='library'),
+    url(r'^photos/', PhotosView.as_view(), name='photos'),
+    url(r'^albums/', AlbumsView.as_view(), name='albums'),
     url(r'^photos/(?P<pk>\d+)/$', SinglePhotoView.as_view(),
         name='photo'),
     url(r'^albums/(?P<pk>\d+)/$', SingleAlbumView.as_view(),
         name='album'),
-    url(r'^photo/add/', login_required(PhotoCreate.as_view()), name='add_photo'),
+    url(r'^photo/add/', login_required(PhotoCreate.as_view()),
+        name='add_photo'),
     url(r'^album/add/$', login_required(AlbumCreate.as_view()),
         name='add_album'),
 ]
