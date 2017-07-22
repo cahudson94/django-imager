@@ -8,12 +8,16 @@ from imager_images.views import (LibraryView,
                                  AlbumCreate,
                                  PhotoEdit,
                                  AlbumEdit,
+                                 PhotosView,
+                                 AlbumsView
                                  )
 
 
 urlpatterns = [
-    url(r'^library/', login_required(LibraryView.as_view()),
+    url(r'^library/$', login_required(LibraryView.as_view()),
         name='library'),
+    url(r'^photos/$', PhotosView.as_view(), name='photos'),
+    url(r'^albums/$', AlbumsView.as_view(), name='albums'),
     url(r'^photos/(?P<pk>\d+)/$', login_required(SinglePhotoView.as_view()),
         name='photo'),
     url(r'^albums/(?P<pk>\d+)/$', login_required(SingleAlbumView.as_view()),
