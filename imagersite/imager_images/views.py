@@ -19,9 +19,29 @@ class LibraryView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         """Provide context for the view."""
         context = super(LibraryView, self).get_context_data(**kwargs)
-        user = context['view'].request.user
-        context['photos'] = ImagerPhoto.objects.filter(user=user)
-        context['albums'] = ImagerAlbum.objects.filter(user=user)
+        request = context['view'].request
+        photo_list = ImagerPhoto.objects.filter(user=request.user)
+        album_list = ImagerAlbum.objects.filter(user=request.user)
+        photo_paginator = Paginator(photo_list, 4)
+        album_paginator = Paginator(album_list, 4)
+        if 'album_page' in request.GET:
+            album_page = request.GET.get('album_page').split('?photo_page=')[0]
+            photo_page = request.GET.get('album_page').split('?photo_page=')[1]
+        else:
+            album_page = 1
+            photo_page = 1
+        try:
+            context['photos'] = photo_paginator.page(photo_page)
+        except PageNotAnInteger:
+            context['photos'] = photo_paginator.page(1)
+        except EmptyPage:
+            context['photos'] = photo_paginator.page(photo_paginator.num_pages)
+        try:
+            context['albums'] = album_paginator.page(album_page)
+        except PageNotAnInteger:
+            context['albums'] = album_paginator.page(1)
+        except EmptyPage:
+            context['albums'] = album_paginator.page(album_paginator.num_pages)
         context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
         context['album_tags'] = set([tag for album in context['albums'] for tag in album.tags.names()])
         return context
@@ -157,9 +177,18 @@ class AlbumTagListView(ListView):
     def get_context_data(self, **kwargs):
         """Return the requested albums."""
         context = super(AlbumTagListView, self).get_context_data(**kwargs)
+        request = context['view'].request
         context['tag'] = self.kwargs.get('slug')
-        context['albums'] = (ImagerAlbum.objects.filter(user=self.request.user)
-                                                .filter(tags__name__in=[self.kwargs.get('slug')]).all())
+        albums = (ImagerAlbum.objects.filter(user=self.request.user)
+                                     .filter(tags__name__in=[self.kwargs.get('slug')]).all())
+        paginator = Paginator(albums, 4)
+        page = request.GET.get('page')
+        try:
+            context['albums'] = paginator.page(page)
+        except PageNotAnInteger:
+            context['albums'] = paginator.page(1)
+        except EmptyPage:
+            context['albums'] = paginator.page(paginator.num_pages)
         return context
 
 
@@ -176,9 +205,18 @@ class PhotoTagListView(ListView):
     def get_context_data(self, **kwargs):
         """Return the requested photos."""
         context = super(PhotoTagListView, self).get_context_data(**kwargs)
+        request = context['view'].request
         context['tag'] = self.kwargs.get('slug')
-        context['photos'] = (ImagerPhoto.objects.filter(user=self.request.user)
-                                                .filter(tags__name__in=[self.kwargs.get('slug')]).all())
+        photos = (ImagerPhoto.objects.filter(user=self.request.user)
+                                     .filter(tags__name__in=[self.kwargs.get('slug')]).all())
+        paginator = Paginator(photos, 4)
+        page = request.GET.get('page')
+        try:
+            context['photos'] = paginator.page(page)
+        except PageNotAnInteger:
+            context['photos'] = paginator.page(1)
+        except EmptyPage:
+            context['photos'] = paginator.page(paginator.num_pages)
         return context
 
 
