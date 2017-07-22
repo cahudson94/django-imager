@@ -5,11 +5,28 @@ from imager_images.models import ImagerAlbum, ImagerPhoto
 
 def library_view(request):
     """The view for the user galleries."""
-    photos = ImagerPhoto.objects.all()
-    albums = ImagerAlbum.objects.all()
+    user = request.user
+    photos = ImagerPhoto.objects.filter(user=user)
+    albums = ImagerAlbum.objects.filter(user=user)
     return render(request, 'imagersite/library.html',
                   {'photos': photos,
                    'albums': albums})
+
+
+def photos_view(request):
+    """The view for the user photos."""
+    user = request.user
+    photos = ImagerPhoto.objects.filter(user=user)
+    return render(request, 'imagersite/library.html',
+                  {'photos': photos})
+
+
+def albums_view(request):
+    """The view for the user albums."""
+    user = request.user
+    albums = ImagerAlbum.objects.filter(user=user)
+    return render(request, 'imagersite/library.html',
+                  {'albums': albums})
 
 
 def photo_view(request, pk):
