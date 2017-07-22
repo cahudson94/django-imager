@@ -25,6 +25,34 @@ class LibraryView(LoginRequiredMixin, TemplateView):
         return context
 
 
+class PhotosView(TemplateView):
+    """"List view for albums and photos."""
+
+    template_name = 'imager_images/library.html'
+
+    def get_context_data(self, **kwargs):
+        """Provide context for the view."""
+        context = super(PhotosView, self).get_context_data(**kwargs)
+        user = context['view'].request.user
+        context['photos'] = ImagerPhoto.objects.filter(user=user)
+        context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
+        return context
+
+
+class AlbumsView(TemplateView):
+    """"List view for albums and photos."""
+
+    template_name = 'imager_images/library.html'
+
+    def get_context_data(self, **kwargs):
+        """Provide context for the view."""
+        context = super(AlbumsView, self).get_context_data(**kwargs)
+        user = context['view'].request.user
+        context['albums'] = ImagerAlbum.objects.filter(user=user)
+        context['album_tags'] = set([tag for album in context['albums'] for tag in album.tags.names()])
+        return context
+
+
 class SinglePhotoView(LoginRequiredMixin, DetailView):
     """The view for individual photos."""
 
