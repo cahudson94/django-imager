@@ -234,7 +234,7 @@ MAIN SECTION
     padding-right: 0;
 }
 
-.page-button {
+.page-button a {
     display: inline-block;
     vertical-align: middle;
     -webkit-appearance: none;
@@ -245,8 +245,17 @@ MAIN SECTION
     background-color: #1779ba;
 }
 
+.page-button a:hover, .page-button a:focus {
+    background-color: #14679e;
+}
+
+.page-button a {
+    color: white;
+}
+
 .page-button p {
     background-color: #cccccc;
+    color: #cccccc;
 }
 
 ul {

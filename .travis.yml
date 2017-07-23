@@ -18,7 +18,7 @@ services:
   - postgresql
 
 before_script:
-  - psql -c "CREATE DATABASE test_db3;" -U postgres
+  - psql -c "CREATE DATABASE test_db;" -U postgres
   - psql -c "CREATE DATABASE usersdb;" -U postgres
 
 # command to run tests

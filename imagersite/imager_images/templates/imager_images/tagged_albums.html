@@ -9,21 +9,17 @@
         <h3>{{ tag }}</h3>
         <div class="pagination">
             <ul class="step-links">
-                <li class="page-button">
                 {% if albums.has_previous %}
+                <li class="page-button">
                     <a href="?page={{ albums.previous_page_number }}">previous</a>
-                {% else %}
-                    <p>previous</p>
                 {% endif %}
                 </li>
                 <li class="current-page">
                     Page {{ albums.number }} of {{ albums.paginator.num_pages }}
                 </li>
-                <li class="page-button">
                 {% if albums.has_next %}
+                <li class="page-button">
                     <a href="?page={{ albums.next_page_number }}">next</a>
-                {% else %}
-                    <p>next</p>
                 {% endif %}
                 </li>
             </ul>

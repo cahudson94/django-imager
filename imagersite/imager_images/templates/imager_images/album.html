@@ -7,21 +7,17 @@
         <h1>{{ album.title }}</h1>
         <div class="pagination">
             <ul class="step-links">
-                <li class="page-button">
                 {% if photos.has_previous %}
+                <li class="page-button">
                     <a href="?page={{ photos.previous_page_number }}">previous</a>
-                {% else %}
-                    <p>previous</p>
                 {% endif %}
                 </li>
                 <li class="current-page">
                     Page {{ photos.number }} of {{ photos.paginator.num_pages }}
                 </li>
-                <li class="page-button">
                 {% if photos.has_next %}
+                <li class="page-button">
                     <a href="?page={{ photos.next_page_number }}">next</a>
-                {% else %}
-                    <p>next</p>
                 {% endif %}
                 </li>
             </ul>
@@ -33,13 +29,14 @@
                     {% thumbnail photo.photo "150x150" crop="center" as im %}
                         <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
                     {% endthumbnail %}
-                    <a href="/images/photos/{{ photo.id }}"><h5>{{ photo.title }}</h5></a>
+                    <a class="title" href="/images/photos/{{ photo.id }}"><h5>{{ photo.title }}</h5></a>
                 </li>
                 {% endfor %}
             {% else %}
                 <h1>You have no photos in this Album!</h1>
             {% endif %}
         </ul>
+        <h5>Description:</h5>
         <p>{{ album.description }}</p>
         <h2>Album Tags: </h2>
         <ul class="tags">
@@ -61,21 +58,17 @@
     </div>
     <div class="pagination">
         <ul class="step-links">
-            <li class="page-button">
             {% if photos.has_previous %}
+            <li class="page-button">
                 <a href="?page={{ photos.previous_page_number }}">previous</a>
-            {% else %}
-                <p>previous</p>
             {% endif %}
             </li>
             <li class="current-page">
                 Page {{ photos.number }} of {{ photos.paginator.num_pages }}
             </li>
-            <li class="page-button">
             {% if photos.has_next %}
+            <li class="page-button">
                 <a href="?page={{ photos.next_page_number }}">next</a>
-            {% else %}
-                <p>next</p>
             {% endif %}
             </li>
         </ul>
