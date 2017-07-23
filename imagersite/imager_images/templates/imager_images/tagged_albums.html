@@ -1,11 +1,29 @@
 {% extends 'imagersite/base.html' %}
 {% load static %}
 {% load thumbnail %}
-{% block title %}Library{% endblock %}
+{% block title %}Library - {{ tag }}{% endblock %}
 {% block body %}
 <div class="library">
     <div class="album-section">
         <h1>Your Albums</h1>
+        <h3>{{ tag }}</h3>
+        <div class="pagination">
+            <ul class="step-links">
+                {% if albums.has_previous %}
+                <li class="page-button">
+                    <a href="?page={{ albums.previous_page_number }}">previous</a>
+                {% endif %}
+                </li>
+                <li class="current-page">
+                    Page {{ albums.number }} of {{ albums.paginator.num_pages }}
+                </li>
+                {% if albums.has_next %}
+                <li class="page-button">
+                    <a href="?page={{ albums.next_page_number }}">next</a>
+                {% endif %}
+                </li>
+            </ul>
+        </div>
         <ul>
             {% for album in albums %}
             <li>

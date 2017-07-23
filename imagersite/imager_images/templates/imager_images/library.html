@@ -30,6 +30,24 @@
                 </ul>
             </div>
         {% endif %}
+        <div class="pagination">
+            <h4>Album Pages</h4>
+            <ul class="step-links">
+                {% if albums.has_previous %}
+                <li class="page-button">
+                    <a href="?album_page={{ albums.previous_page_number }}?photo_page={{ photos.number }}">previous</a>
+                {% endif %}
+                </li>
+                <li class="current-page">
+                    Page {{ albums.number }} of {{ albums.paginator.num_pages }}
+                </li>
+                {% if albums.has_next %}
+                <li class="page-button">
+                    <a href="?album_page={{ albums.next_page_number }}?photo_page={{ photos.number }}">next</a>
+                {% endif %}
+                </li>
+            </ul>
+        </div>
         <h2 class="profile-button"><a class="button" id="center" href="{% url 'add_album' %}">Add Album</a></h2>
     </div>
     {% endif %}
@@ -58,6 +76,24 @@
             </div>
         {% endif %}
         <h2 class="profile-button"><a class="button" id="center" href="{% url 'add_photo' %}">Add Photo</a></h2>
+        <div class="pagination">
+            <h4>Photo Pages</h4>
+            <ul class="step-links">
+                {% if photos.has_previous %}
+                <li class="page-button">
+                    <a href="?album_page={{ albums.number }}?photo_page={{ photos.previous_page_number }}">previous</a>
+                {% endif %}
+                </li>
+                <li class="current-page">
+                    Page {{ photos.number }} of {{ photos.paginator.num_pages }}
+                </li>
+                {% if photos.has_next %}
+                <li class="page-button">
+                    <a href="?album_page={{ albums.number }}?photo_page={{ photos.next_page_number }}">next</a>
+                {% endif %}
+                </li>
+            </ul>
+        </div>
     </div>
     {% endif %}
 </div>
