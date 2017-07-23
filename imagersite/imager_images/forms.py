@@ -10,7 +10,7 @@ class PhotoForm(forms.ModelForm):
         """."""
 
         model = ImagerPhoto
-        fields = ['title', 'description', 'published', 'photo']
+        fields = ['title', 'description', 'published', 'photo', 'tags']
         widgets = {
             'description': forms.Textarea()
         }

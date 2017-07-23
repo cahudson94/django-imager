@@ -19,6 +19,23 @@
                 <h1>You have no photos in this Album!</h1>
             {% endif %}
         </ul>
+        <p>{{ album.description }}</p>
+        <h2>Album Tags: </h2>
+        <ul class="tags">
+        {% for tag in album_tags %}
+            <li>
+                <a href="{% url 'tagged_albums' slug=tag %}">{{ tag }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+        <h2>Photo Tags: </h2>
+        <ul class="tags">
+        {% for tag in photo_tags %}
+            <li>
+                <a href="{% url 'tagged_photos' slug=tag %}">{{ tag }}</a>
+            </li>
+        {% endfor %}
+        </ul>
         <a href="{% url 'edit_album' pk=album.id %}" id="edit" class="button"><h5>Edit</h5></a>
     </div>
 {% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'imagersite/base.html' %}
+{% load static %}
+{% load thumbnail %}
+{% block title %}Library{% endblock %}
+{% block body %}
+<div class="library">
+    <div class="photo-section">
+        <h1>Your Photos</h1>
+        <ul>
+            {% for photo in photos %}
+            <li>
+                {% thumbnail photo.photo "150x150" crop="center" as pic %}
+                    <img src="{{ pic.url }}" width="{{ pic.width }}" height="{{ pic.height }}"></img>
+                {% endthumbnail %}
+                <a class="title" href="/images/photos/{{ photo.id }}"><h5>{{ photo.title }}</h5></a>
+            </li>
+        {% endfor %}
+        </ul>
+        {% if photo_tags %}
+            <div class="tags">
+                <ul>
+                    {% for tag in photo_tags %}
+                    <li>
+                        <a href="{% url 'tagged_photos' slug=tag %}">{{ tag }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <h2 class="profile-button"><a class="button" id="center" href="{% url 'add_photo' %}">Add Photo</a></h2>
+    </div>
+</div>
+{% endblock %}
