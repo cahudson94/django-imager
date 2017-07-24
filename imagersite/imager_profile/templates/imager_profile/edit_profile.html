@@ -59,8 +59,10 @@
             <input type="url" name="website" value="{{ user.imagerprofile.website }}">
         </p>
         <p>
-            <label for="profile_pic">Profile Picture: </label>
-            <input type="file" name="profile_pic" value="{{ user.imagerprofile.pic }}">
+            <label for="pic">Profile Picture: </label>
+            Currently:
+            <a href="{{ user.imagerprofile.pic.url }}">{{ user.imagerprofile.pic }}</a>
+            <input type="file" name="pic">
         </p>
         <input class="button" type="submit" value="Confirm"/>
     </form>
