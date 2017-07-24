@@ -151,6 +151,10 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
                 user.imagerprofile.website = info['website']
             else:
                 user.imagerprofile.website = user.imagerprofile.website
+            if 'profile_pic' in info.keys():
+                user.imagerprofile.pic = info['profile_pic']
+            else:
+                user.imagerprofile.pic = user.imagerprofile.pic
             user.save()
             user.imagerprofile.save()
 
