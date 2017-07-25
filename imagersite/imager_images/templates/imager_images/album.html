@@ -4,6 +4,7 @@
 {% block body %}
 <div class="album-page">
     <div class="photo-section">
+        {% if published != 'PV' or auth %}
         <h1>{{ album.title }}</h1>
         <div class="pagination">
             <ul class="step-links">
@@ -54,7 +55,9 @@
             </li>
         {% endfor %}
         </ul>
+        {% if auth %}
         <a href="{% url 'edit_album' pk=album.id %}" id="edit" class="button"><h5>Edit</h5></a>
+        {% endif %}
     </div>
     <div class="pagination">
         <ul class="step-links">
@@ -72,5 +75,9 @@
             {% endif %}
             </li>
         </ul>
+        {% else %}
+        <h1>THIS ALBUM IS PRIVATE!</h1>
+        </div>
     </div>
+{% endif %}
 {% endblock %}

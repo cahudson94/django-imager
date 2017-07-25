@@ -5,10 +5,13 @@
 
 {% block body %}
 <div class='photo-page'>
+    {% if published != 'PV' or auth %}
     <h1>{{ photo.title }}</h1>
     <img class="photo" src="{{photo.photo.url}}">
     <p> {{ photo.description }} </p>
-    <a href="{% url 'edit_photo' pk=photo.id %}" id="edit" class="button"><h5>Edit</h5></a>
+    {% if auth %}
+        <a href="{% url 'edit_photo' pk=photo.id %}" id="edit" class="button"><h5>Edit</h5></a>
+    {% endif %}
     <h2>Photos like this one: </h2>
     <ul class="shared-tags">
         {% for photo in shared_tags %}
@@ -20,5 +23,8 @@
             </li>
         {% endfor %}
     </ul>
+    {% else %}
+    <h1>THIS PHOTO IS PRIVATE!</h1>
+    {% endif %}
 </div>
 {% endblock %}
