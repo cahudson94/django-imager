@@ -61,6 +61,8 @@ class SinglePhotoView(LoginRequiredMixin, DetailView):
         """Provide context for the view."""
         context = super(SinglePhotoView, self).get_context_data(**kwargs)
         context['photo'] = context['imagerphoto']
+        if context['view'].request.user == context['photo'].user:
+            context['auth'] = 'is_auth'
         return context
 
 
@@ -75,6 +77,8 @@ class SingleAlbumView(LoginRequiredMixin, DetailView):
         context = super(SingleAlbumView, self).get_context_data(**kwargs)
         context['album'] = context['imageralbum']
         context['photos'] = context['imageralbum'].photos.all()
+        if context['view'].request.user == context['album'].user:
+            context['auth'] = 'is_auth'
         return context
 
 
