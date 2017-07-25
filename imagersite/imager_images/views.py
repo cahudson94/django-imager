@@ -42,6 +42,7 @@ class LibraryView(LoginRequiredMixin, TemplateView):
             context['albums'] = album_paginator.page(1)
         except EmptyPage:
             context['albums'] = album_paginator.page(album_paginator.num_pages)
+        context['location'] = 'library'
         context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
         context['album_tags'] = set([tag for album in context['albums'] for tag in album.tags.names()])
         return context
@@ -69,6 +70,7 @@ class PhotosView(TemplateView):
             context['photos'] = photo_paginator.page(1)
         except EmptyPage:
             context['photos'] = photo_paginator.page(photo_paginator.num_pages)
+        context['location'] = 'photos'
         context['albums'] = album_paginator.page(album_paginator.num_pages)
         context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
         return context
@@ -97,6 +99,7 @@ class AlbumsView(TemplateView):
             context['albums'] = album_paginator.page(1)
         except EmptyPage:
             context['albums'] = album_paginator.page(album_paginator.num_pages)
+        context['location'] = 'albums'
         context['album_tags'] = set([tag for album in context['albums'] for tag in album.tags.names()])
         return context
 

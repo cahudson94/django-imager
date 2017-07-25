@@ -25,14 +25,21 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'supersecrete')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ec2-50-112-40-8.us-west-2.compute.amazonaws.com', '127.0.0.1', 'localhost']
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'c.hud.imager@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PW')
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = 'c.hud.imager@gmail.com'
+SERVER_EMAIL = 'c.hud.imager@gmail.com'
 
 
 # Application definition

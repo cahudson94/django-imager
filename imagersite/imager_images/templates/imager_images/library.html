@@ -4,7 +4,7 @@
 {% block title %}Library{% endblock %}
 {% block body %}
 <div class="library">
-    {% if albums %}
+    {% if 'library' in location or 'albums' in location %}
     <div class="album-section">
         <h1 class="header">{% if photos %}<a href="{% url 'albums' %}">{% endif %}Your Albums</a></h1>
         <ul>
@@ -51,7 +51,7 @@
         <h2 class="profile-button"><a class="button" id="center" href="{% url 'add_album' %}">Add Album</a></h2>
     </div>
     {% endif %}
-    {% if photos %}
+    {% if 'library' in location or 'photos' in location %}
     <div class="photo-section">
         <h1 class="header">{% if albums %}<a href="{% url 'photos' %}">{% endif %}Your Photos</a></h1>
         <ul>
