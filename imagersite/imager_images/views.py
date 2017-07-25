@@ -63,6 +63,7 @@ class SinglePhotoView(LoginRequiredMixin, DetailView):
         context['photo'] = context['imagerphoto']
         if context['view'].request.user == context['photo'].user:
             context['auth'] = 'is_auth'
+        context['published'] = context['photo'].published
         return context
 
 
@@ -79,6 +80,7 @@ class SingleAlbumView(LoginRequiredMixin, DetailView):
         context['photos'] = context['imageralbum'].photos.all()
         if context['view'].request.user == context['album'].user:
             context['auth'] = 'is_auth'
+        context['published'] = context['album'].published
         return context
 
 

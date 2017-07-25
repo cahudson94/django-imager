@@ -5,11 +5,15 @@
 
 {% block body %}
 <div class='photo-page'>
+    {% if published != 'PV' or auth %}
     <img class="photo" src="{{photo.photo.url}}">
     <h1>{{ photo.title }}</h1>
     <p> {{ photo.description }} </p>
     {% if auth %}
         <a href="{% url 'edit_photo' pk=photo.id %}" id="edit" class="button"><h5>Edit</h5></a>
+    {% endif %}
+    {% else %}
+    <h1>THIS PHOTO IS PRIVATE!</h1>
     {% endif %}
 </div>
 {% endblock %}

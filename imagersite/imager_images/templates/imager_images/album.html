@@ -4,6 +4,7 @@
 {% block body %}
 <div class="album-page">
     <div class="photo-section">
+        {% if published != 'PV' or auth %}
         <h1>{{ album.title }}</h1>
         <ul>
             {% if photos %}
@@ -22,5 +23,9 @@
         {% if auth %}
         <a href="{% url 'edit_album' pk=album.id %}" id="edit" class="button"><h5>Edit</h5></a>
         {% endif %}
+        {% else %}
+        <h1>THIS ALBUM IS PRIVATE!</h1>
+        </div>
     </div>
+{% endif %}
 {% endblock %}
