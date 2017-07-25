@@ -4,9 +4,9 @@
 
 ## Authors: Chris Hudson
 
-##Description:
+## Description:
 A photosharing webapp built on Django framework for Code Fellows 401d6.
 
 
-##Site:
+## Site:
 http://ec2-50-112-40-8.us-west-2.compute.amazonaws.com/
