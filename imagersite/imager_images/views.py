@@ -68,6 +68,9 @@ class SinglePhotoView(LoginRequiredMixin, DetailView):
         shared_tags = (ImagerPhoto.objects.filter(user=user)
                                           .filter(tags__name__in=tags).distinct())
         context['shared_tags'] = [photo for photo in shared_tags[:5]]
+        if context['view'].request.user == context['photo'].user:
+            context['auth'] = 'is_auth'
+        context['published'] = context['photo'].published
         return context
 
 
@@ -84,6 +87,9 @@ class SingleAlbumView(LoginRequiredMixin, DetailView):
         context['photos'] = context['imageralbum'].photos.all()
         context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
         context['album_tags'] = set([tag for tag in context['album'].tags.names()])
+        if context['view'].request.user == context['album'].user:
+            context['auth'] = 'is_auth'
+        context['published'] = context['album'].published
         return context
 
 
