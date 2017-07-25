@@ -61,7 +61,11 @@
         <p>
             <label for="pic">Profile Picture: </label>
             Currently:
+            {% if user.imagerprofile.pic %}
             <a href="{{ user.imagerprofile.pic.url }}">{{ user.imagerprofile.pic }}</a>
+            {% else %}
+            <a>{% static 'default_pic.jpg' %}</a>
+            {% endif %}
             <input type="file" name="pic">
         </p>
         <input class="button" type="submit" value="Confirm"/>
