@@ -25,15 +25,21 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'supersecrete')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ec2-50-112-40-8.us-west-2.compute.amazonaws.com', '127.0.0.1', 'localhost']
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'home'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'c.hud.imager@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get('GMAIL_PW')
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = 'c.hud.imager@gmail.com'
+SERVER_EMAIL = 'c.hud.imager@gmail.com'
 
 # Application definition
 
@@ -49,6 +55,7 @@ INSTALLED_APPS = [
     'imager_images',
     'sorl.thumbnail',
     'taggit',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -138,13 +145,36 @@ REGISTRATION_OPEN = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+#if DEBUG:
+#    STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    '/var/www/static/'
-]
+#    STATICFILES_DIRS = [
+#        os.path.join(BASE_DIR, 'static'),
+#        '/var/www/static/'
+#    ]
 
-MEDIA_URL = '/MEDIA/'
+#    MEDIA_URL = '/MEDIA/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
+#    MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
+#else:
+AWS_STORAGE_BUCKET_NAME = 'chris-django-imager'
+AWS_ACCESS_KEY_ID = os.environ.get('IAM_USER_ACCESS_KEY_ID')
+
+AWS_SECRET_ACCESS_KEY = os.environ.get('IAM_USER_SECRET_ACCESS_KEY')
+
+AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(
+    AWS_STORAGE_BUCKET_NAME
+)
+
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'imagersite.custom_storages.StaticStorage'
+STATIC_URL = 'https://{}/{}/'.format(
+    AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION
+)
+
+MEDIAFILES_LOCATION = 'MEDIA'
+DEFAULT_FILE_STORAGE = 'imagersite.custom_storages.MediaStorage'
+MEDIA_URL = 'https://{}/{}/'.format(
+    AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION
+)
+

@@ -102,11 +102,17 @@ class ProfileEditView(LoginRequiredMixin, UpdateView):
     model = User
     template_name = 'imager_profile/edit_profile.html'
     success_url = reverse_lazy('profile')
-    form_class = ProfileForm
+    fields = []
 
     def get_object(self):
         """Return the user."""
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+	"""Get the form."""
+	context = super(ProfileEditView, self).get_context_data(**kwargs)
+	context['form'] = ProfileForm()
+	return context
 
     def post(self, request, *args, **kwargs):
         """Set the new info."""
