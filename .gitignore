@@ -100,5 +100,5 @@ ENV/
 # mypy
 .mypy_cache/
 
-imagersite/MEDIA/*
-!imagersite/MEDIA/.gitkeep
+imagersite/media/*
+!imagersite/media/.gitkeep

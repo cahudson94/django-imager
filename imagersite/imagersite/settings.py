@@ -155,9 +155,9 @@ if DEBUG:
         '/var/www/static/'
     ]
 
-    MEDIA_URL = '/MEDIA/'
+    MEDIA_URL = '/media/'
 
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 else:
     AWS_STORAGE_BUCKET_NAME = 'chris-django-imager'
     AWS_ACCESS_KEY_ID = os.environ.get('IAM_USER_ACCESS_KEY_ID')
@@ -174,7 +174,7 @@ else:
         AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION
     )
 
-    MEDIAFILES_LOCATION = 'MEDIA'
+    MEDIAFILES_LOCATION = 'media'
     DEFAULT_FILE_STORAGE = 'imagersite.custom_storages.MediaStorage'
     MEDIA_URL = 'https://{}/{}/'.format(
         AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION
