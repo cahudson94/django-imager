@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'imager_images',
     'sorl.thumbnail',
     'taggit',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -145,13 +146,35 @@ REGISTRATION_OPEN = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+if DEBUG:
+    STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    '/var/www/static/'
-]
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+        '/var/www/static/'
+    ]
 
-MEDIA_URL = '/MEDIA/'
+    MEDIA_URL = '/MEDIA/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'MEDIA')
+else:
+    AWS_STORAGE_BUCKET_NAME = 'chris-django-imager'
+    AWS_ACCESS_KEY_ID = os.environ.get('IAM_USER_ACCESS_KEY_ID')
+
+    AWS_SECRET_ACCESS_KEY = os.environ.get('IAM_USER_SECRET_ACCESS_KEY')
+
+    AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(
+        AWS_STORAGE_BUCKET_NAME
+    )
+
+    STATICFILES_LOCATION = 'static'
+    STATICFILES_STORAGE = 'imagersite.custom_storages.StaticStorage'
+    STATIC_URL = 'https://{}/{}/'.format(
+        AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION
+    )
+
+    MEDIAFILES_LOCATION = 'media'
+    DEFAULT_FILE_STORAGE = 'imagersite.custom_storages.MediaStorage'
+    MEDIA_URL = 'https://{}/{}/'.format(
+        AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION
+    )
