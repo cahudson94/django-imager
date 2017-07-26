@@ -42,6 +42,7 @@ class LibraryView(LoginRequiredMixin, TemplateView):
             context['albums'] = album_paginator.page(1)
         except EmptyPage:
             context['albums'] = album_paginator.page(album_paginator.num_pages)
+        context['location'] = 'library'
         context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
         context['album_tags'] = set([tag for album in context['albums'] for tag in album.tags.names()])
         return context
@@ -69,6 +70,7 @@ class PhotosView(TemplateView):
             context['photos'] = photo_paginator.page(1)
         except EmptyPage:
             context['photos'] = photo_paginator.page(photo_paginator.num_pages)
+        context['location'] = 'photos'
         context['albums'] = album_paginator.page(album_paginator.num_pages)
         context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
         return context
@@ -97,6 +99,7 @@ class AlbumsView(TemplateView):
             context['albums'] = album_paginator.page(1)
         except EmptyPage:
             context['albums'] = album_paginator.page(album_paginator.num_pages)
+        context['location'] = 'albums'
         context['album_tags'] = set([tag for album in context['albums'] for tag in album.tags.names()])
         return context
 
@@ -118,6 +121,9 @@ class SinglePhotoView(LoginRequiredMixin, DetailView):
         num = 5 if len(shared_tags) >= 5 else len(shared_tags)
         shared_sample = random.sample(list(shared_tags), num)
         context['shared_tags'] = set(photo for photo in shared_sample)
+        if context['view'].request.user == context['photo'].user:
+            context['auth'] = 'is_auth'
+        context['published'] = context['photo'].published
         return context
 
 
@@ -143,6 +149,9 @@ class SingleAlbumView(LoginRequiredMixin, DetailView):
             context['photos'] = paginator.page(paginator.num_pages)
         context['photo_tags'] = set([tag for photo in context['photos'] for tag in photo.tags.names()])
         context['album_tags'] = set([tag for tag in context['album'].tags.names()])
+        if context['view'].request.user == context['album'].user:
+            context['auth'] = 'is_auth'
+        context['published'] = context['album'].published
         return context
 
 
